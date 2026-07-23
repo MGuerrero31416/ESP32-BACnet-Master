@@ -5,6 +5,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifndef USER_SETTINGS_PRINT_ENABLE
+#define USER_SETTINGS_PRINT_ENABLE 1
+#endif
+
 /* WiFi settings */
 extern const bool USER_ENABLE_BACNET_IP;
 extern const char USER_WIFI_SSID[];
@@ -119,6 +123,8 @@ extern const char *USER_BO_DESCRIPTIONS[USER_BO_COUNT];
 extern const char *USER_BO_ACTIVE_TEXT[USER_BO_COUNT];
 extern const char *USER_BO_INACTIVE_TEXT[USER_BO_COUNT];
 extern const uint8_t USER_BO_INITIAL_VALUES[USER_BO_COUNT];
+
+void User_Settings_Print(void);
 
 static inline uint32_t user_ai_instance(
     user_ai_role_t role)

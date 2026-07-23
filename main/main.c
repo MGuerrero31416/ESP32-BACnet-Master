@@ -33,6 +33,7 @@ static TaskHandle_t adafruit_io_task_handle = NULL;
 void app_main(void)
 {
     ESP_ERROR_CHECK(app_storage_init());
+    User_Settings_Print();
 
     const stack_profiler_task_handle_refs_t profiler_task_handles = {
         .bacnet_rx = &bacnet_rx_task_handle,
