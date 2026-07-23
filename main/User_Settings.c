@@ -8,15 +8,15 @@ const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publish
 
 
 const bool USER_ENABLE_BACNET_IP = true;
-const bool USER_WIFI_USE_STATIC_IP = false;
+const bool USER_WIFI_USE_STATIC_IP = true;
 const char USER_WIFI_STATIC_IP_ADDR[] = "10.120.245.97";
 const char USER_WIFI_STATIC_IP_GATEWAY[] = "10.120.245.254";
 const char USER_WIFI_STATIC_IP_NETMASK[] = "255.255.255.0";
 const char USER_WIFI_STATIC_DNS[] = "8.8.8.8";
 
 /* BACnet device settings */
-const char USER_BACNET_DEVICE_NAME[] = "ESP32-S3_55502";
-const uint32_t USER_BACNET_DEVICE_INSTANCE = 55502;
+const char USER_BACNET_DEVICE_NAME[] = "ESP32_55533";
+const uint32_t USER_BACNET_DEVICE_INSTANCE = 55533;
 const int USER_OVERRIDE_NVS_ON_FLASH = 0; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
 
 /* BBMD foreign device registration */
@@ -29,7 +29,7 @@ const uint16_t USER_BBMD_TTL_SECONDS = 600;
 
 /* BACnet MS/TP settings */
 const bool USER_ENABLE_BACNET_MSTP = false;
-const uint8_t USER_MSTP_MAC_ADDRESS = 21;
+const uint8_t USER_MSTP_MAC_ADDRESS = 33;
 const uint8_t USER_MSTP_MAX_INFO_FRAMES = 80;
 const uint8_t USER_MSTP_MAX_MASTER = 127;
 const uint32_t USER_MSTP_BAUD_RATE = 38400U;

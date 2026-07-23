@@ -1,4 +1,5 @@
-#pragma once
+#ifndef USER_PRIVATE_SETTINGS_H
+#define USER_PRIVATE_SETTINGS_H
 
 /*
  * Copy this file to:
@@ -13,3 +14,8 @@
 
 const char USER_WIFI_SSID[] = "YOUR_WIFI_SSID";
 const char USER_WIFI_PASS[] = "YOUR_WIFI_PASSWORD";
+
+const char USER_AIO_USERNAME[] = "USER_AIO_USERNAME";
+const char USER_AIO_KEY[] = "USER_AIO_KEY";
+
+#endif // USER_PRIVATE_SETTINGS_H

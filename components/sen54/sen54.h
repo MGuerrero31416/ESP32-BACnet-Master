@@ -5,15 +5,24 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include "esp_err.h"
+#include "sdkconfig.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// I2C configuration - adjust pins to match your hardware
+/* I2C configuration
+ST7796S profile:
+    SEN54 SDA = GPIO4
+    SEN54 SCL = GPIO5
+
+HW657A profile:
+    SEN54 SDA = GPIO13
+    SEN54 SCL = GPIO14
+*/ 
 #define SEN54_I2C_PORT    0          // I2C_NUM_0
-#define SEN54_I2C_SDA_PIN 4
-#define SEN54_I2C_SCL_PIN 5
+#define SEN54_I2C_SDA_PIN CONFIG_USER_SEN54_SDA_GPIO
+#define SEN54_I2C_SCL_PIN CONFIG_USER_SEN54_SCL_GPIO
 #define SEN54_I2C_ADDR    0x69
 #define SEN54_I2C_FREQ_HZ 100000
 

@@ -8,6 +8,7 @@ set(APP_SRCS
     "app/sen54_bacnet_config.c"
     "app/sensor_service.c"
     "app/stack_profiler.c"
+    "app/sensors/sen54_sensor_service.c"
 
     "bacnet/bacnet_app.c"
     "bacnet/bacnet_coordinator.c"
@@ -35,6 +36,11 @@ elseif(CONFIG_USER_DISPLAY_ST7796S_TEST)
         "ui/profiles/display_st7796s_test.cpp"
     )
 
+elseif(CONFIG_USER_DISPLAY_ST7789_HW657A)
+    list(APPEND APP_SRCS
+        "ui/profiles/display_st7789_hw657a.cpp"
+    )
+
 elseif(CONFIG_USER_DISPLAY_NONE)
     list(APPEND APP_SRCS
         "ui/profiles/display_none.c"
@@ -42,6 +48,12 @@ elseif(CONFIG_USER_DISPLAY_NONE)
 
 elseif(NOT CMAKE_BUILD_EARLY_EXPANSION)
     message(FATAL_ERROR "No display profile selected")
+endif()
+
+if(CONFIG_USER_HAS_DS18B20)
+    list(APPEND APP_SRCS
+        "app/sensors/ds18b20_sensor_service.c"
+    )
 endif()
 
 idf_component_register(
@@ -56,6 +68,7 @@ idf_component_register(
         "platform"
         "ui"
         "ui/fonts"
+        "app/sensors"
 
     REQUIRES
         bacnet-stack
