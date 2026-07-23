@@ -664,8 +664,27 @@ void bacnet_app_send_mstp_i_am(void)
 
 void bacnet_app_reset_mstp_diagnostics(void)
 {
-    MSTP_RS485_Rx_Bytes_Get_Reset();
-    MSTP_RS485_Preamble_Counts_Get_Reset(NULL, NULL);
+    uint32_t rx_bytes = MSTP_RS485_Rx_Bytes_Get_Reset();
+    uint32_t preamble_55 = 0;
+    uint32_t preamble_55ff = 0;
+    uint32_t pdu_count = s_mstp_pdu_count;
+
+    MSTP_RS485_Preamble_Counts_Get_Reset(&preamble_55, &preamble_55ff);
+
+    /*
+     * Optional 30s MS/TP diagnostics log.
+     * Re-enable by uncommenting this block when active wire-level stats are needed.
+     */
+    /*
+    ESP_LOGI(
+        TAG,
+        "MS/TP 30s diag: rx_bytes=%lu preamble_55=%lu preamble_55ff=%lu pdu_count=%lu",
+        (unsigned long)rx_bytes,
+        (unsigned long)preamble_55,
+        (unsigned long)preamble_55ff,
+        (unsigned long)pdu_count);
+    */
+
     s_mstp_pdu_count = 0;
     s_mstp_apdu_count = 0;
     s_mstp_rp_total = 0;
