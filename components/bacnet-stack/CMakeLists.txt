@@ -1,0 +1,71 @@
+idf_component_register(
+    SRCS 
+        "src/bacnet/abort.c"
+        "src/bacnet/bacapp.c"
+        "src/bacnet/bacdcode.c"
+        "src/bacnet/bacint.c"
+        "src/bacnet/bacreal.c"
+        "src/bacnet/bacstr.c"
+        "src/bacnet/bacaddr.c"
+        "src/bacnet/indtext.c"
+        "src/bacnet/bacdevobjpropref.c"
+        "src/bacnet/npdu.c"
+        "src/bacnet/bacerror.c"
+        "src/bacnet/timestamp.c"
+        "src/bacnet/property.c"
+        "src/bacnet/proplist.c"
+        "src/bacnet/cov.c"
+        "src/bacnet/iam.c"
+        "src/bacnet/whois.c"
+        "src/bacnet/rp.c"
+        "src/bacnet/rpm.c"
+        "src/bacnet/wp.c"
+        "src/bacnet/memcopy.c"
+        "src/bacnet/bactext.c"
+        "src/bacnet/datetime.c"
+        "src/bacnet/dcc.c"
+        "src/bacnet/reject.c"
+        "src/bacnet/basic/sys/keylist.c"
+        "src/bacnet/basic/sys/ringbuf.c"
+        "src/bacnet/basic/sys/mstimer.c"
+        "src/bacnet/basic/binding/address.c"
+        "src/bacnet/basic/bbmd/h_bbmd.c"
+        "src/bacnet/basic/service/h_apdu.c"
+        "src/bacnet/basic/service/h_cov.c"
+        "src/bacnet/basic/service/h_iam.c"
+        "src/bacnet/basic/service/h_whois.c"
+        "src/bacnet/basic/service/h_rp.c"
+        "src/bacnet/basic/service/h_rpm.c"
+        "src/bacnet/basic/service/h_wp.c"
+        "src/bacnet/basic/service/s_iam.c"
+        "src/bacnet/basic/service/s_whois.c"
+        "src/bacnet/basic/service/s_rp.c"
+        "src/bacnet/basic/tsm/tsm.c"
+        "src/bacnet/basic/object/device.c"
+        "src/bacnet/basic/object/av.c"
+        "src/bacnet/basic/object/bv.c"
+        "src/bacnet/basic/object/ai.c"
+        "src/bacnet/basic/object/bi.c"
+        "src/bacnet/basic/object/bo.c"
+        "src/bacnet/datalink/datalink.c"
+        "src/bacnet/datalink/cobs.c"
+        "src/bacnet/datalink/bvlc.c"
+        "src/bacnet/datalink/crc.c"
+        "src/bacnet/datalink/mstp.c"
+        "src/bacnet/datalink/mstptext.c"
+        "src/bacnet/datalink/dlmstp.c"
+        "ports/esp32/src/bip_init_minimal.c"
+        "ports/esp32/src/stubs.c"
+        "ports/esp32/src/codec_stubs.c"
+    INCLUDE_DIRS 
+        "src"
+    REQUIRES
+        freertos lwip esp_wifi esp_netif esp_timer
+)
+
+# Define BACnet/IP as the datalink layer
+target_compile_definitions(${COMPONENT_LIB} PUBLIC 
+    BACDL_BIP=1
+    BACDL_MSTP=1
+    BACDL_MULTIPLE=1
+)

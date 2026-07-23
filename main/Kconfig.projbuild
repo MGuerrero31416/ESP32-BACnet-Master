@@ -1,0 +1,17 @@
+menu "Project hardware"
+
+choice USER_DISPLAY_PROFILE
+    prompt "Display profile"
+    default USER_DISPLAY_ST7796S_CURRENT
+
+    config USER_DISPLAY_ST7796S_CURRENT
+        bool "ST7796S 480x320 - current UI"
+
+    config USER_DISPLAY_ST7796S_TEST
+        bool "ST7796S 480x320 - test UI"
+
+    config USER_DISPLAY_NONE
+        bool "No display"
+endchoice
+
+endmenu

@@ -1,0 +1,13 @@
+menu "TFT_eSPI Configuration"
+    config TFT_ESPI_ENABLE
+        bool "Enable TFT_eSPI"
+        default y
+        help
+            Enable TFT_eSPI library
+
+    # Add more configuration options here as needed
+    # Example:
+    # config TFT_WIDTH
+    #     int "TFT Width"
+    #     default 240
+endmenu

@@ -1,0 +1,4 @@
+Source: https://github.com/Sensirion/embedded-i2c-sen5x
+Branch: master
+Commit: 890335056283b0efb51c921fc06a0c1626a19953
+Integration: vendored source files; not a Git submodule

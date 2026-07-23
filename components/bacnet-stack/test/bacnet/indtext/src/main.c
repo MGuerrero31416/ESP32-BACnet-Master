@@ -1,0 +1,77 @@
+/**
+ * @file
+ * @brief test Index Text utility API
+ * @author Steve Karg <skarg@users.sourceforge.net>
+ * @date 2004
+ * @copyright SPDX-License-Identifier: MIT
+ */
+#include <zephyr/ztest.h>
+#include <bacnet/indtext.h>
+
+/**
+ * @addtogroup bacnet_tests
+ * @{
+ */
+
+/**
+ * @brief Test
+ */
+static INDTEXT_DATA data_list[] = {
+    { 1, "Joshua" },   { 2, "Mary" },
+    { 3, "Anna" },     { 4, "Christopher" },
+    { 5, "Patricia" }, { 6, "JoshuaMaryAnnaChristopherPatricia" },
+    { 0, NULL }
+};
+
+#if defined(CONFIG_ZTEST_NEW_API)
+ZTEST(indtext_tests, testIndexText)
+#else
+static void testIndexText(void)
+#endif
+{
+    uint32_t i; /*counter */
+    const char *pString;
+    uint32_t index;
+    bool valid;
+    uint32_t count = 0;
+
+    for (i = 0; i < 10; i++) {
+        pString = indtext_by_index(data_list, i);
+        if (pString) {
+            count++;
+            valid = indtext_by_string(data_list, pString, &index);
+            zassert_true(valid, NULL);
+            zassert_equal(index, i, "index=%u i=%u", index, i);
+            zassert_equal(
+                index, indtext_by_string_default(data_list, pString, index),
+                NULL);
+        }
+    }
+    zassert_equal(indtext_count(data_list), count, NULL);
+    zassert_false(indtext_by_string(data_list, "Harry", NULL), NULL);
+    zassert_false(indtext_by_string(data_list, NULL, NULL), NULL);
+    zassert_false(indtext_by_string(NULL, NULL, NULL), NULL);
+    zassert_is_null(indtext_by_index(data_list, 0), NULL);
+    zassert_is_null(indtext_by_index(data_list, 10), NULL);
+    zassert_is_null(indtext_by_index(NULL, 10), NULL);
+    /* case insensitive versions */
+    zassert_true(indtext_by_istring(data_list, "JOSHUA", NULL), NULL);
+    zassert_true(indtext_by_istring(data_list, "joshua", NULL), NULL);
+    valid = indtext_by_istring(data_list, "ANNA", &index);
+    zassert_equal(
+        index, indtext_by_istring_default(data_list, "ANNA", index), NULL);
+}
+/**
+ * @}
+ */
+
+#if defined(CONFIG_ZTEST_NEW_API)
+ZTEST_SUITE(indtext_tests, NULL, NULL, NULL, NULL, NULL);
+#else
+void test_main(void)
+{
+    ztest_test_suite(indtext_tests, ztest_unit_test(testIndexText));
+
+    ztest_run_test_suite(indtext_tests);
+}
+#endif

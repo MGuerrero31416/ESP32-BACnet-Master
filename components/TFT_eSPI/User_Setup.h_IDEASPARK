@@ -1,0 +1,56 @@
+#define USER_SETUP_INFO "ESP32 ST7789 1.9in 170x320 (Ideaspark breakout)"
+
+// ==========================
+// Driver
+// ==========================
+#define ST7789_DRIVER
+
+// ==========================
+// Resolution
+// ==========================
+#define TFT_WIDTH  170
+#define TFT_HEIGHT 320
+
+// ==========================
+// SPI pins (must match Adafruit)
+// ==========================
+#define TFT_MOSI 23
+#define TFT_SCLK 18
+#define TFT_CS   15
+#define TFT_DC    2
+#define TFT_RST   4
+
+// ==========================
+// SPI speed
+// ==========================
+//#define SPI_FREQUENCY  27000000
+#define SPI_FREQUENCY 40000000
+
+// ==========================
+// Color / panel options
+// ==========================
+#define TFT_RGB_ORDER TFT_BGR
+// #define TFT_INVERSION_ON   // enable only if colors look wrong
+
+// ==========================
+// 170x320 ST7789 offsets (required)
+// ==========================
+#define TFT_OFFSET_X 35
+#define TFT_OFFSET_Y 0
+
+// ==========================
+// Fonts
+// ==========================
+#define LOAD_GLCD
+#define LOAD_FONT2
+#define LOAD_GFXFF
+#define SMOOTH_FONT
+#define LOAD_FONT7
+#define LOAD_GFXFF
+
+// ==========================
+// Suppress touch warning (optional)
+// ==========================
+#define TOUCH_CS -1  // Disable touch
+
+
