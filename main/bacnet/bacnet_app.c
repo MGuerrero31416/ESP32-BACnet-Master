@@ -370,13 +370,10 @@ esp_err_t bacnet_app_init(
      */
     Device_Init(NULL);
 
+    User_Settings_InitDeviceIdentity();
+
     Device_Set_Object_Instance_Number(
         USER_BACNET_DEVICE_INSTANCE);
-
-    Device_Set_Vendor_Identifier(260);
-
-    Device_Object_Name_ANSI_Init(
-        USER_BACNET_DEVICE_NAME);
 
     ESP_LOGI(
         TAG,

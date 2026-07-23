@@ -28,6 +28,14 @@ extern const uint32_t USER_AIO_PUBLISH_INTERVAL_SECONDS; // Adafruit IO publishi
 
 /* BACnet device settings */
 extern const char USER_BACNET_DEVICE_NAME[];
+extern const char USER_BACNET_DEVICE_DESCRIPTION[];
+extern const char USER_BACNET_MODEL_NAME[];
+extern const char USER_BACNET_VENDOR_NAME[];
+extern const uint16_t USER_BACNET_VENDOR_ID;
+extern const char USER_BACNET_LOCATION[];
+extern const char USER_BACNET_FIRMWARE_REVISION[];
+extern const char USER_BACNET_APPLICATION_SOFTWARE_VERSION[];
+extern const char USER_BACNET_SERIAL_NUMBER[];
 extern const uint32_t USER_BACNET_DEVICE_INSTANCE;
 extern const int USER_OVERRIDE_NVS_ON_FLASH;
 
@@ -74,8 +82,21 @@ typedef enum {
  * Logical positions in the USER_BV_* parallel arrays.
  */
 typedef enum {
-    USER_BV_SEN54_FULL_RESET = 0
+    USER_BV_SEN54_FULL_RESET = 0,
+    USER_BV_SEN54_MEASUREMENT_ENABLE,
+    USER_BV_SEN54_START_FAN_CLEANING,
+    USER_BV_SEN54_CLEAR_STATUS
 } user_bv_role_t;
+
+/*
+ * Logical positions in the USER_BI_* parallel arrays.
+ */
+typedef enum {
+    USER_BI_SEN54_FAN_FAILURE = 0,
+    USER_BI_SEN54_LASER_ERROR,
+    USER_BI_SEN54_VOC_SENSOR_ERROR,
+    USER_BI_SEN54_RHT_SENSOR_ERROR
+} user_bi_role_t;
 
 /*
  * Logical positions in the USER_AV_* parallel arrays.
@@ -125,6 +146,7 @@ extern const char *USER_BO_INACTIVE_TEXT[USER_BO_COUNT];
 extern const uint8_t USER_BO_INITIAL_VALUES[USER_BO_COUNT];
 
 void User_Settings_Print(void);
+void User_Settings_InitDeviceIdentity(void);
 
 static inline uint32_t user_ai_instance(
     user_ai_role_t role)
@@ -142,6 +164,12 @@ static inline uint32_t user_av_instance(
     user_av_role_t role)
 {
     return USER_AV_INSTANCES[(size_t)role];
+}
+
+static inline uint32_t user_bi_instance(
+    user_bi_role_t role)
+{
+    return USER_BI_INSTANCES[(size_t)role];
 }
 
 #endif /* USER_SETTINGS_H */

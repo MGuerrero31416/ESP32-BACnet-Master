@@ -483,6 +483,92 @@ esp_err_t sen54_set_temperature_offset_parameters_raw(
     return ESP_OK;
 }
 
+esp_err_t sen54_set_measurement_enabled(bool enabled)
+{
+    esp_err_t err = sen54_i2c_transaction_begin();
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    int16_t rc = enabled ?
+        sen5x_start_measurement() :
+        sen5x_stop_measurement();
+    sen54_i2c_transaction_end();
+
+    if (rc != 0) {
+        ESP_LOGW(
+            TAG,
+            "%s failed: %d",
+            enabled ? "sen5x_start_measurement" : "sen5x_stop_measurement",
+            rc);
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
+esp_err_t sen54_start_fan_cleaning(void)
+{
+    esp_err_t err = sen54_i2c_transaction_begin();
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    int16_t rc = sen5x_start_fan_cleaning();
+    sen54_i2c_transaction_end();
+
+    if (rc != 0) {
+        ESP_LOGW(TAG, "sen5x_start_fan_cleaning failed: %d", rc);
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
+esp_err_t sen54_read_device_status(uint32_t *device_status)
+{
+    if (device_status == NULL) {
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    esp_err_t err = sen54_i2c_transaction_begin();
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    int16_t rc = sen5x_read_device_status(device_status);
+    sen54_i2c_transaction_end();
+
+    if (rc != 0) {
+        ESP_LOGW(TAG, "sen5x_read_device_status failed: %d", rc);
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
+esp_err_t sen54_read_and_clear_device_status(uint32_t *device_status)
+{
+    if (device_status == NULL) {
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    esp_err_t err = sen54_i2c_transaction_begin();
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    int16_t rc = sen5x_read_and_clear_device_status(device_status);
+    sen54_i2c_transaction_end();
+
+    if (rc != 0) {
+        ESP_LOGW(TAG, "sen5x_read_and_clear_device_status failed: %d", rc);
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
 void sen54_get_data(sen54_data_t *data)
 {
     if (!data) {

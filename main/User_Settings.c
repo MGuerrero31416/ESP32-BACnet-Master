@@ -1,8 +1,10 @@
 #include "User_Settings.h"
 #include "bacnet/bacenum.h"
+#include "bacnet/basic/object/device.h"
 #include "esp_log.h"
 
 #include <inttypes.h>
+#include <string.h>
 
 /* Private WiFi and Adafruit IO credentials are provided in User_Private_Settings.h */
 #include "User_Private_Settings.h"
@@ -22,13 +24,15 @@ const char USER_BACNET_DEVICE_NAME[] = "ESP32_55533";
 const uint32_t USER_BACNET_DEVICE_INSTANCE = 55533;
 const int USER_OVERRIDE_NVS_ON_FLASH = 0; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
 
-/* BBMD foreign device registration */
-const uint8_t USER_BBMD_IP_OCTET_1 = 192;
-const uint8_t USER_BBMD_IP_OCTET_2 = 168;
-const uint8_t USER_BBMD_IP_OCTET_3 = 1;
-const uint8_t USER_BBMD_IP_OCTET_4 = 1;
-const uint16_t USER_BBMD_PORT = 0xBAC0;
-const uint16_t USER_BBMD_TTL_SECONDS = 600;
+/* BACnet device identity settings */
+const char USER_BACNET_DEVICE_DESCRIPTION[] = "ESP32 BACnet Master";
+const char USER_BACNET_MODEL_NAME[] = "ESP32-WROOM32-SEN54-ST7789";
+const char USER_BACNET_VENDOR_NAME[] = "ESCAP FMS";
+const uint16_t USER_BACNET_VENDOR_ID = 260;
+const char USER_BACNET_LOCATION[] = "SEC-B Ground Floor FMS";
+const char USER_BACNET_FIRMWARE_REVISION[] = "1.0";
+const char USER_BACNET_APPLICATION_SOFTWARE_VERSION[] = "1.0";
+const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
 const bool USER_ENABLE_BACNET_MSTP = true;
@@ -36,6 +40,14 @@ const uint8_t USER_MSTP_MAC_ADDRESS = 33;
 const uint8_t USER_MSTP_MAX_INFO_FRAMES = 1;
 const uint8_t USER_MSTP_MAX_MASTER = 34;
 const uint32_t USER_MSTP_BAUD_RATE = 38400U;
+
+/* BBMD foreign device registration */
+const uint8_t USER_BBMD_IP_OCTET_1 = 192;
+const uint8_t USER_BBMD_IP_OCTET_2 = 168;
+const uint8_t USER_BBMD_IP_OCTET_3 = 1;
+const uint8_t USER_BBMD_IP_OCTET_4 = 1;
+const uint16_t USER_BBMD_PORT = 0xBAC0;
+const uint16_t USER_BBMD_TTL_SECONDS = 600;
 
 /* BACnet object defaults */
 const uint32_t USER_AV_INSTANCES[USER_AV_COUNT] = {
@@ -132,33 +144,33 @@ const float USER_AV_COV_INCREMENTS[USER_AV_COUNT] = {
 
 const uint32_t USER_BV_INSTANCES[USER_BV_COUNT] = { 1, 2, 3, 4 };
 const char *USER_BV_NAMES[USER_BV_COUNT] = {
-    "SEN54_Full_Reset",
-    "BV2",
-    "BV3",
-    "BV4"
+    "SEN54 Full Reset",
+    "SEN54 Measurement Enable",
+    "SEN54 Start Fan Cleaning",
+    "SEN54 Clear Status"
 };
 const char *USER_BV_DESCRIPTIONS[USER_BV_COUNT] = {
-    "Write ACTIVE to send I2C reset (0xD304) to SEN54",
-    "Binary Value 2",
-    "Binary Value 3",
-    "Binary Value 4"
+    "Send a full reset and reapply saved SEN54 configuration",
+    "Keeps measurement enabled, INACTIVE stops measurement",
+    "Start a manual SEN54 fan cleaning cycle",
+    "Read-and-clear SEN54 sticky status flags"
 };
 const char *USER_BV_ACTIVE_TEXT[USER_BV_COUNT] = {
     "RESETTING",
-    "ACTIVE",
-    "ACTIVE",
-    "ACTIVE"
+    "ENABLED",
+    "CLEANING",
+    "CLEARING"
 };
 const char *USER_BV_INACTIVE_TEXT[USER_BV_COUNT] = {
     "IDLE",
-    "INACTIVE",
-    "INACTIVE",
-    "INACTIVE"
+    "DISABLED",
+    "IDLE",
+    "IDLE"
 };
 const uint8_t USER_BV_INITIAL_VALUES[USER_BV_COUNT] = {
     BINARY_INACTIVE,
-    BINARY_INACTIVE,
     BINARY_ACTIVE,
+    BINARY_INACTIVE,
     BINARY_INACTIVE
 };
 
@@ -216,16 +228,16 @@ const float USER_AI_COV_INCREMENTS[USER_AI_COUNT] = {
 
 const uint32_t USER_BI_INSTANCES[USER_BI_COUNT] = { 1, 2, 3, 4 };
 const char *USER_BI_NAMES[USER_BI_COUNT] = {
-    "BI1",
-    "BI2",
-    "BI3",
-    "BI4"
+    "SEN54 Fan Failure",
+    "SEN54 Laser Error",
+    "SEN54 VOC Sensor Error",
+    "SEN54 RHT Sensor Error"
 };
 const char *USER_BI_DESCRIPTIONS[USER_BI_COUNT] = {
-    "Binary Input 1",
-    "Binary Input 2",
-    "Binary Input 3",
-    "Binary Input 4"
+    "SEN54 fan error",
+    "SEN54 laser error",
+    "SEN54 VOC sensor (SGP) error",
+    "ACTIVE RHT sensor (SHT) error "
 };
 const char *USER_BI_ACTIVE_TEXT[USER_BI_COUNT] = {
     "ACTIVE",
@@ -282,10 +294,37 @@ const uint8_t USER_BO_INITIAL_VALUES[USER_BO_COUNT] = {
 static const char *TAG_USER_SETTINGS = "user_settings";
 #endif
 
+void User_Settings_InitDeviceIdentity(void)
+{
+    (void)Device_Object_Name_ANSI_Init(
+        USER_BACNET_DEVICE_NAME);
+    (void)Device_Set_Description(
+        USER_BACNET_DEVICE_DESCRIPTION,
+        strlen(USER_BACNET_DEVICE_DESCRIPTION));
+    (void)Device_Set_Model_Name(
+        USER_BACNET_MODEL_NAME,
+        strlen(USER_BACNET_MODEL_NAME));
+    Device_Set_Vendor_Identifier(
+        USER_BACNET_VENDOR_ID);
+    (void)Device_Set_Location(
+        USER_BACNET_LOCATION,
+        strlen(USER_BACNET_LOCATION));
+    (void)Device_Set_Firmware_Revision(
+        USER_BACNET_FIRMWARE_REVISION,
+        strlen(USER_BACNET_FIRMWARE_REVISION));
+    (void)Device_Set_Application_Software_Version(
+        USER_BACNET_APPLICATION_SOFTWARE_VERSION,
+        strlen(USER_BACNET_APPLICATION_SOFTWARE_VERSION));
+    (void)Device_Serial_Number_Set(
+        USER_BACNET_SERIAL_NUMBER,
+        strlen(USER_BACNET_SERIAL_NUMBER));
+}
+
 void User_Settings_Print(void)
 {
 #if USER_SETTINGS_PRINT_ENABLE
-    ESP_LOGI(TAG_USER_SETTINGS, "========== User Settings ==========");
+    ESP_LOGI(TAG_USER_SETTINGS, "====================================");
+    ESP_LOGI(TAG_USER_SETTINGS, "=========== User Settings ==========");
 
     ESP_LOGI(TAG_USER_SETTINGS, "[Wi-Fi / BACnet-IP]");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_ENABLE_BACNET_IP: %s", USER_ENABLE_BACNET_IP ? "true" : "false");
@@ -305,6 +344,14 @@ void User_Settings_Print(void)
 
     ESP_LOGI(TAG_USER_SETTINGS, "[BACnet Device]");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_DEVICE_NAME: %s", USER_BACNET_DEVICE_NAME);
+    ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_DEVICE_DESCRIPTION: %s", USER_BACNET_DEVICE_DESCRIPTION);
+    ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_MODEL_NAME: %s", USER_BACNET_MODEL_NAME);
+    ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_VENDOR_NAME: %s", USER_BACNET_VENDOR_NAME);
+    ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_VENDOR_ID: %" PRIu16, USER_BACNET_VENDOR_ID);
+    ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_LOCATION: %s", USER_BACNET_LOCATION);
+    ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_FIRMWARE_REVISION: %s", USER_BACNET_FIRMWARE_REVISION);
+    ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_APPLICATION_SOFTWARE_VERSION: %s", USER_BACNET_APPLICATION_SOFTWARE_VERSION);
+    ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_SERIAL_NUMBER: %s", USER_BACNET_SERIAL_NUMBER);
     ESP_LOGI(
         TAG_USER_SETTINGS,
         "USER_BACNET_DEVICE_INSTANCE: %" PRIu32,
@@ -329,6 +376,7 @@ void User_Settings_Print(void)
     ESP_LOGI(TAG_USER_SETTINGS, "USER_MSTP_MAX_MASTER: %" PRIu8, USER_MSTP_MAX_MASTER);
     ESP_LOGI(TAG_USER_SETTINGS, "USER_MSTP_BAUD_RATE: %" PRIu32, USER_MSTP_BAUD_RATE);
 
-    ESP_LOGI(TAG_USER_SETTINGS, "===================================");
+    ESP_LOGI(TAG_USER_SETTINGS, "====================================");
+    ESP_LOGI(TAG_USER_SETTINGS, "====================================");
 #endif
 }

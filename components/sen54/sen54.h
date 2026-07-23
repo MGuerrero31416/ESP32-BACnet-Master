@@ -100,6 +100,12 @@ esp_err_t sen54_set_temperature_offset_parameters_raw(
     int16_t raw_slope,
     uint16_t time_constant_seconds);
 
+/* SEN54 measurement/maintenance controls (thread-safe). */
+esp_err_t sen54_set_measurement_enabled(bool enabled);
+esp_err_t sen54_start_fan_cleaning(void);
+esp_err_t sen54_read_device_status(uint32_t *device_status);
+esp_err_t sen54_read_and_clear_device_status(uint32_t *device_status);
+
 /* Shared I2C transaction guard used by SEN54 and Sensirion HAL. */
 esp_err_t sen54_i2c_transaction_begin(void);
 void sen54_i2c_transaction_end(void);
