@@ -4,6 +4,7 @@
 #include "driver/uart.h"
 #include "esp_log.h"
 #include "esp_timer.h"
+#include "esp_rom_sys.h"
 #include "freertos/FreeRTOS.h"
 
 #define MSTP_UART_PORT UART_NUM_2
@@ -12,7 +13,7 @@
 #define MSTP_UART_DE_PIN GPIO_NUM_0
 #define MSTP_UART_BAUD_DEFAULT 38400U
 #define MSTP_UART_RX_BUF_SIZE 512
-#define MSTP_UART_TX_BUF_SIZE 512
+#define MSTP_UART_TX_BUF_SIZE 0
 #define MSTP_UART_TX_TIMEOUT_MS 1000
 
 static const char *TAG = "mstp_rs485";
@@ -77,6 +78,11 @@ void MSTP_RS485_Init(void)
         ESP_LOGE(TAG, "UART driver install failed: %d", err);
     }
 
+    err = uart_set_mode(MSTP_UART_PORT, UART_MODE_UART);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "UART mode set failed: %d", err);
+    }
+
     mstp_last_activity_us = esp_timer_get_time();
     mstp_uart_initialized = true;
 
@@ -100,13 +106,29 @@ void MSTP_RS485_Send(const uint8_t *payload, uint16_t payload_len)
 
     mstp_tx_in_progress = true;
     mstp_rs485_set_tx_mode(true);
+    esp_rom_delay_us(200);
 
-    int written = uart_write_bytes(MSTP_UART_PORT, payload, payload_len);
-    if (written < 0) {
-        ESP_LOGE(TAG, "UART write failed");
+    size_t remaining = payload_len;
+    const uint8_t *next = payload;
+    while (remaining > 0) {
+        int written = uart_write_bytes(MSTP_UART_PORT, (const char *)next, remaining);
+        if (written < 0) {
+            ESP_LOGE(TAG, "UART write failed");
+            break;
+        }
+        if (written == 0) {
+            ESP_LOGE(TAG, "UART write stalled");
+            break;
+        }
+        next += (size_t)written;
+        remaining -= (size_t)written;
     }
 
-    uart_wait_tx_done(MSTP_UART_PORT, pdMS_TO_TICKS(MSTP_UART_TX_TIMEOUT_MS));
+    if (remaining == 0) {
+        uart_wait_tx_done(MSTP_UART_PORT, pdMS_TO_TICKS(MSTP_UART_TX_TIMEOUT_MS));
+        esp_rom_delay_us(1000);
+    }
+
     mstp_rs485_set_tx_mode(false);
     mstp_tx_in_progress = false;
     mstp_last_activity_us = esp_timer_get_time();
@@ -114,11 +136,17 @@ void MSTP_RS485_Send(const uint8_t *payload, uint16_t payload_len)
 
 bool MSTP_RS485_Read(uint8_t *buf)
 {
-    if (!buf) {
-        return false;
-    }
     if (!mstp_uart_initialized) {
         MSTP_RS485_Init();
+    }
+
+    if (!buf) {
+        size_t buffered_len = 0;
+        if (uart_get_buffered_data_len(MSTP_UART_PORT, &buffered_len) != ESP_OK) {
+            return false;
+        }
+
+        return buffered_len > 0;
     }
 
     int len = uart_read_bytes(MSTP_UART_PORT, buf, 1, 0);

@@ -41,6 +41,7 @@
 #include "esp_timer.h"
 #include "esp_wifi.h"
 #include "freertos/semphr.h"
+#include "freertos/task.h"
 #include "mstp_rs485.h"
 #include "wifi_helper.h"
 
@@ -601,13 +602,14 @@ esp_err_t bacnet_app_start(
      * Create the MS/TP receive task only if MS/TP initialized.
      */
     if (s_mstp_ready) {
-        task_result = xTaskCreate(
+        task_result = xTaskCreatePinnedToCore(
             bacnet_mstp_receive_task,
             "bacnet_mstp_rx",
             12288,
             NULL,
-            5,
-            task_handles->mstp_rx);
+            10,
+            task_handles->mstp_rx,
+            1);
 
         if (task_result != pdPASS) {
             ESP_LOGE(

@@ -7,7 +7,7 @@ const bool USER_ENABLE_ADAFRUIT_IO = false; //  Enable Adafruit IO MQTT publishi
 const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publishing SEN54 sensor data. This must exactly match the Feed Key shown in Adafruit IO
 
 
-const bool USER_ENABLE_BACNET_IP = true;
+const bool USER_ENABLE_BACNET_IP = false;
 const bool USER_WIFI_USE_STATIC_IP = true;
 const char USER_WIFI_STATIC_IP_ADDR[] = "10.120.245.97";
 const char USER_WIFI_STATIC_IP_GATEWAY[] = "10.120.245.254";
@@ -28,10 +28,10 @@ const uint16_t USER_BBMD_PORT = 0xBAC0;
 const uint16_t USER_BBMD_TTL_SECONDS = 600;
 
 /* BACnet MS/TP settings */
-const bool USER_ENABLE_BACNET_MSTP = false;
+const bool USER_ENABLE_BACNET_MSTP = true;
 const uint8_t USER_MSTP_MAC_ADDRESS = 33;
-const uint8_t USER_MSTP_MAX_INFO_FRAMES = 80;
-const uint8_t USER_MSTP_MAX_MASTER = 127;
+const uint8_t USER_MSTP_MAX_INFO_FRAMES = 1;
+const uint8_t USER_MSTP_MAX_MASTER = 34;
 const uint32_t USER_MSTP_BAUD_RATE = 38400U;
 
 /* BACnet object defaults */
