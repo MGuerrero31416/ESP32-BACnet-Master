@@ -1,6 +1,6 @@
 # ESP32-S3 BACnet Air Quality Sensor Display
 
-ESP32-S3 BACnet device with a 320 × 480 ST7796S TFT display, SEN54 air-quality sensing, DS18B20 temperature sensing, 
+ESP32-S3 BACnet device with a configurable display, SEN54 air-quality sensing, DS18B20 temperature sensing, 
 BACnet/IP over Wi-Fi, and optional BACnet MS/TP over RS485.
 
 The application is organized into `main/app`, `main/bacnet`, `main/platform`, and `main/ui`. 

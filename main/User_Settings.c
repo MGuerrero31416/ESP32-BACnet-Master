@@ -3,7 +3,7 @@
 
 /* Private WiFi and Adafruit IO credentials are provided in User_Private_Settings.h */
 #include "User_Private_Settings.h"
-const bool USER_ENABLE_ADAFRUIT_IO = true; //  Enable Adafruit IO MQTT publishing service
+const bool USER_ENABLE_ADAFRUIT_IO = false; //  Enable Adafruit IO MQTT publishing service
 const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publishing SEN54 sensor data. This must exactly match the Feed Key shown in Adafruit IO
 
 

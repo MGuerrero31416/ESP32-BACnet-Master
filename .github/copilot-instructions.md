@@ -8,7 +8,6 @@ Build only with:
 
 - ESP-IDF v5.5.4
 - `C:\esp\v5.5.4\esp-idf`
-- Target `esp32s3`
 - Arduino-ESP32 3.3.10
 
 Never run `idf.py`, CMake, or Ninja directly. Build only with:
