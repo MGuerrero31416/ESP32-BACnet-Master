@@ -10,8 +10,8 @@
 
 #include "sensors/sen54_sensor_service.h"
 
-#if defined(CONFIG_USER_HAS_DS18B20) && \
-    CONFIG_USER_HAS_DS18B20
+#if defined(CONFIG_USER_SENSOR_DS18B20) && \
+    CONFIG_USER_SENSOR_DS18B20
 
 #include "sensors/ds18b20_sensor_service.h"
 
@@ -53,8 +53,8 @@ static void sensor_service_task(void *parameter)
             esp_err_to_name(err));
     }
 
-#if defined(CONFIG_USER_HAS_DS18B20) && \
-    CONFIG_USER_HAS_DS18B20
+#if defined(CONFIG_USER_SENSOR_DS18B20) && \
+    CONFIG_USER_SENSOR_DS18B20
 
     /*
      * Initialize the DS18B20 application service and
@@ -113,8 +113,8 @@ static void sensor_service_task(void *parameter)
             continue;
         }
 
-#if defined(CONFIG_USER_HAS_DS18B20) && \
-    CONFIG_USER_HAS_DS18B20
+#if defined(CONFIG_USER_SENSOR_DS18B20) && \
+    CONFIG_USER_SENSOR_DS18B20
 
         /*
          * Read, average and calibrate the DS18B20 value,

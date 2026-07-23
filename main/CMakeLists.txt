@@ -50,7 +50,7 @@ elseif(NOT CMAKE_BUILD_EARLY_EXPANSION)
     message(FATAL_ERROR "No display profile selected")
 endif()
 
-if(CONFIG_USER_HAS_DS18B20)
+if(CONFIG_USER_SENSOR_DS18B20)
     list(APPEND APP_SRCS
         "app/sensors/ds18b20_sensor_service.c"
     )

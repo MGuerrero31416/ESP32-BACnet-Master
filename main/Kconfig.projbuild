@@ -36,7 +36,7 @@ config USER_SEN54_SCL_GPIO
     default 14 if USER_DISPLAY_ST7789_HW657A
     default 5
 
-config USER_HAS_DS18B20
+config USER_SENSOR_DS18B20
     bool
     default y if USER_DISPLAY_ST7796S_CURRENT
     default y if USER_DISPLAY_ST7796S_TEST
