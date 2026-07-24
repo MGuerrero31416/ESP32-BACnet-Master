@@ -19,9 +19,9 @@ static bool i2c_ready = false;
 #define SEN54_CMD_STOP_MEASUREMENT   0x0104
 #define SEN54_CMD_READ_VALUES        0x03C4
 // Device Reset (0xD304): forces a full hardware reset of the SEN54.
-// All internal state — including the VOC/NOx algorithm learned baselines —
+// All internal state, including the VOC/NOx algorithm learned baselines,
 // is cleared. The sensor re-runs its start-up sequence (~1 s) and requires
-// a new Start Measurement command (0x2103) before readings resume.
+// a new Start Measurement command (0x0021) before readings resume.
 // Equivalent to a power-cycle. See SEN54 datasheet §3.2 "Device Reset".
 #define SEN54_CMD_RESET              0xD304
 
@@ -358,11 +358,9 @@ float sen54_get_nox_index(void)   { SEN54_GETTER(nox_index) }
 esp_err_t sen54_full_reset(void)
 {
     /*
-     * Send Device Reset command 0xD304.
-     *
-     * The reset clears volatile settings, including the fan
-     * auto-cleaning interval and temperature-compensation
-     * parameters.
+    * Send Device Reset command 0xD304 and wait for the sensor
+    * to return to Idle. Configuration reapply and measurement
+    * restart are handled by the caller.
      */
     esp_err_t ret = sen54_i2c_transaction_begin();
 
@@ -391,38 +389,6 @@ esp_err_t sen54_full_reset(void)
      * Allow the SEN54 to finish its reset and return to Idle.
      */
     vTaskDelay(pdMS_TO_TICKS(1200));
-
-    ret = sen54_i2c_transaction_begin();
-
-    if (ret != ESP_OK) {
-        return ret;
-    }
-
-    ret = sen54_write_cmd(
-        SEN54_CMD_START_MEASUREMENT);
-
-    sen54_i2c_transaction_end();
-
-    if (ret != ESP_OK) {
-        ESP_LOGE(
-            TAG,
-            "SEN54 restart measurement after reset "
-            "failed (%d)",
-            ret);
-
-        return ret;
-    }
-
-    /*
-     * Start Measurement can require up to 50 ms to complete.
-     * Do not allow the caller to send configuration commands
-     * while that command is still being processed.
-     */
-    vTaskDelay(pdMS_TO_TICKS(100));
-
-    ESP_LOGI(
-        TAG,
-        "SEN54 measurement restarted after full reset");
 
     return ESP_OK;
 }
@@ -539,6 +505,24 @@ esp_err_t sen54_set_measurement_enabled(bool enabled)
             "%s failed: %d",
             enabled ? "sen5x_start_measurement" : "sen5x_stop_measurement",
             rc);
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
+esp_err_t sen54_start_measurement(void)
+{
+    esp_err_t err = sen54_i2c_transaction_begin();
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    int16_t rc = sen5x_start_measurement();
+    sen54_i2c_transaction_end();
+
+    if (rc != 0) {
+        ESP_LOGW(TAG, "sen5x_start_measurement failed: %d", rc);
         return ESP_FAIL;
     }
 

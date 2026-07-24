@@ -74,13 +74,11 @@ float sen54_get_nox_index(void);
 void sen54_get_data(sen54_data_t *data);
 
 /**
- * @brief Send a full reset command (I2C 0xD304) to the SEN54 and restart measurement.
+ * @brief Send the SEN54 Device Reset command (I2C 0xD304) and wait for recovery.
  *
- * Issues the Device Reset command defined in the SEN54 datasheet §3.2.
- * This resets all internal sensor state — including learned VOC/NOx algorithm
- * baselines — and is equivalent to a power-cycle. The function waits ~1.2 s
- * for the sensor to complete its start-up sequence, then sends Start
- * Measurement (0x0021) so that readings resume automatically.
+ * Issues the Device Reset command defined in the SEN54 datasheet §3.2 and
+ * waits about 1.2 s for the sensor to return to Idle. The function does not
+ * reapply configuration and does not restart measurement.
  *
  * Triggered by BACnet BV1 (SEN54_Full_Reset) being written ACTIVE.
  *
@@ -102,6 +100,7 @@ esp_err_t sen54_set_temperature_offset_parameters_raw(
 
 /* SEN54 measurement/maintenance controls (thread-safe). */
 esp_err_t sen54_set_measurement_enabled(bool enabled);
+esp_err_t sen54_start_measurement(void);
 esp_err_t sen54_start_fan_cleaning(void);
 esp_err_t sen54_read_device_status(uint32_t *device_status);
 esp_err_t sen54_read_and_clear_device_status(uint32_t *device_status);

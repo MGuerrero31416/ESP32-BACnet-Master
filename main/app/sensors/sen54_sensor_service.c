@@ -5,6 +5,8 @@
 
 #include "esp_err.h"
 #include "esp_log.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
 #include "User_Settings.h"
 #include "sen54.h"
@@ -248,7 +250,8 @@ sen54_sensor_service_cycle(void)
 
     /*
      * Writing ACTIVE to the configured BV triggers a full
-     * SEN54 reset. The BV automatically returns to INACTIVE.
+     * SEN54 reset/recovery sequence. The BV automatically
+     * returns to INACTIVE.
      */
     if (Binary_Value_Present_Value(reset_bv) ==
         BINARY_ACTIVE) {
@@ -258,16 +261,19 @@ sen54_sensor_service_cycle(void)
             "BV%lu ACTIVE: sending SEN54 full reset",
             (unsigned long)reset_bv);
 
-        esp_err_t err = sen54_full_reset();
+        measurement_enabled = false;
 
-        ESP_LOGI(
-            TAG,
-            "SEN54 full reset %s",
-            err == ESP_OK ? "OK" : "FAILED");
+        esp_err_t reset_err = sen54_full_reset();
+        if (reset_err != ESP_OK) {
+            ESP_LOGW(
+                TAG,
+                "SEN54 full reset failed: %s",
+                esp_err_to_name(reset_err));
+        }
 
-        if (err == ESP_OK) {
-            esp_err_t config_err =
-                sen54_bacnet_config_reapply_saved();
+        esp_err_t config_err = ESP_FAIL;
+        if (reset_err == ESP_OK) {
+            config_err = sen54_bacnet_config_reapply_saved();
 
             if (config_err != ESP_OK) {
                 ESP_LOGW(
@@ -277,11 +283,25 @@ sen54_sensor_service_cycle(void)
             }
         }
 
+        esp_err_t restart_err = ESP_FAIL;
+        if (reset_err == ESP_OK && config_err == ESP_OK) {
+            restart_err = sen54_start_measurement();
+
+            if (restart_err != ESP_OK) {
+                ESP_LOGW(
+                    TAG,
+                    "SEN54 measurement restart failed: %s",
+                    esp_err_to_name(restart_err));
+            } else {
+                /* Allow start-measurement processing to complete. */
+                vTaskDelay(pdMS_TO_TICKS(100));
+                measurement_enabled = true;
+            }
+        }
+
         Binary_Value_Present_Value_Set(
             reset_bv,
             BINARY_INACTIVE);
-
-        measurement_enabled = true;
 
         /*
          * The common sensor task must apply the reset recovery
