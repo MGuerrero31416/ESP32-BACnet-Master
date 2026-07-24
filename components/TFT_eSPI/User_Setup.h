@@ -2,7 +2,7 @@
 
 #include "sdkconfig.h"
 
-#if defined(CONFIG_USER_DISPLAY_ST7796S_CURRENT) || \
+#if defined(CONFIG_USER_DISPLAY_ST7796S) || \
     defined(CONFIG_USER_DISPLAY_ST7796S_TEST)
 
 #include "User_Setups/Setup_Project_ST7796S.h"

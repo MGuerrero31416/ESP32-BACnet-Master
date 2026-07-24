@@ -198,9 +198,9 @@ menu "Project hardware"
 
 choice USER_DISPLAY_PROFILE
     prompt "Display profile"
-    default USER_DISPLAY_ST7796S_CURRENT
+    default USER_DISPLAY_ST7796S
 
-    config USER_DISPLAY_ST7796S_CURRENT
+    config USER_DISPLAY_ST7796S
         bool "ST7796S 480x320 - current UI"
 
     config USER_DISPLAY_ST7796S_TEST
@@ -239,7 +239,7 @@ source.
 The display source is appended according to the selected profile:
 
 ```cmake
-if(CONFIG_USER_DISPLAY_ST7796S_CURRENT)
+if(CONFIG_USER_DISPLAY_ST7796S)
     list(APPEND APP_SRCS
         "ui/profiles/display_st7796s_current.cpp"
     )
@@ -299,7 +299,7 @@ check during normal configuration.
  * Kconfig option that selects the UI implementation.
  */
 
-#if defined(CONFIG_USER_DISPLAY_ST7796S_CURRENT) || \
+#if defined(CONFIG_USER_DISPLAY_ST7796S) || \
     defined(CONFIG_USER_DISPLAY_ST7796S_TEST)
 
 #include "User_Setups/Setup_Project_ST7796S.h"
@@ -464,7 +464,7 @@ This allows another profile to use:
 After `tft.init()` and `tft.setRotation(...)`, log the selected UI and hardware:
 
 ```cpp
-ESP_LOGI(TAG, "UI profile: ST7796S CURRENT");
+ESP_LOGI(TAG, "UI profile: USER_DISPLAY_ST7796S");
 ESP_LOGI(TAG, "TFT hardware: %s", USER_SETUP_INFO);
 
 ESP_LOGI(
@@ -536,14 +536,14 @@ The selected profile can also be checked directly in `sdkconfig`.
 Current UI:
 
 ```text
-CONFIG_USER_DISPLAY_ST7796S_CURRENT=y
+CONFIG_USER_DISPLAY_ST7796S=y
 # CONFIG_USER_DISPLAY_ST7796S_TEST is not set
 ```
 
 Test UI:
 
 ```text
-# CONFIG_USER_DISPLAY_ST7796S_CURRENT is not set
+# CONFIG_USER_DISPLAY_ST7796S is not set
 CONFIG_USER_DISPLAY_ST7796S_TEST=y
 ```
 
@@ -604,7 +604,7 @@ Use this when the physical hardware is unchanged but the screen layout differs.
 Example:
 
 ```text
-ST7796S current UI
+USER_DISPLAY_ST7796S UI
 ST7796S maintenance UI
 ST7796S compact UI
 ```
@@ -654,7 +654,7 @@ elseif(CONFIG_USER_DISPLAY_ST7796S_MAINTENANCE)
 Update `components/TFT_eSPI/User_Setup.h`:
 
 ```cpp
-#if defined(CONFIG_USER_DISPLAY_ST7796S_CURRENT) || \
+#if defined(CONFIG_USER_DISPLAY_ST7796S) || \
     defined(CONFIG_USER_DISPLAY_ST7796S_TEST) || \
     defined(CONFIG_USER_DISPLAY_ST7796S_MAINTENANCE)
 
@@ -1079,7 +1079,7 @@ USER_DISPLAY_<CONTROLLER>_<BOARD_OR_SIZE>_<UI>
 Examples:
 
 ```text
-USER_DISPLAY_ST7796S_CURRENT
+USER_DISPLAY_ST7796S
 USER_DISPLAY_ST7796S_TEST
 USER_DISPLAY_ST7796S_BOARD_B
 USER_DISPLAY_ST7789_240X320

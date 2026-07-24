@@ -441,7 +441,7 @@ extern "C" void display_init(void) {
     tft.setRotation(1);
 
     // print both the UI profile and hardware setup during startup
-        ESP_LOGI(TAG, "UI profile: ST7796S CURRENT");
+        ESP_LOGI(TAG, "UI profile: USER_DISPLAY_ST7796S");
         ESP_LOGI(TAG, "TFT hardware: %s", USER_SETUP_INFO);
         ESP_LOGI(
             TAG,

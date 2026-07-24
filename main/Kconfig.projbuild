@@ -1,44 +1,40 @@
 menu "Project hardware"
 
-choice USER_DISPLAY_PROFILE
-    prompt "Display profile"
+    choice USER_DISPLAY_PROFILE
+        prompt "Display profile"
+        default USER_DISPLAY_NONE
 
-    default USER_DISPLAY_ST7796S_CURRENT if IDF_TARGET_ESP32S3
-    default USER_DISPLAY_ST7789_HW657A if IDF_TARGET_ESP32
+        config USER_DISPLAY_ST7796S
+            bool "ST7796S 480x320 3.5in - colorful UI"
 
-    config USER_DISPLAY_ST7796S_CURRENT
-        bool "ESP32-S3: ST7796S 480x320 - current UI"
-        depends on IDF_TARGET_ESP32S3
+        config USER_DISPLAY_ST7796S_TEST
+            bool "ST7796S 480x320 - test UI"
 
-    config USER_DISPLAY_ST7796S_TEST
-        bool "ESP32-S3: ST7796S 480x320 - test UI"
-        depends on IDF_TARGET_ESP32S3
+        config USER_DISPLAY_ST7789_HW657A
+            bool "ST7789 170x320 - HW657A - Simple UI"
 
-    config USER_DISPLAY_ST7789_HW657A
-        bool "ESP32-WROOM-32: ST7789 170x320 - HW657A UI"
-        depends on IDF_TARGET_ESP32
+        config USER_DISPLAY_NONE
+            bool "No display"
 
-    config USER_DISPLAY_NONE
-        bool "No display"
-endchoice
+    endchoice
 
 config USER_SEN54_SDA_GPIO
     int
-    default 4 if USER_DISPLAY_ST7796S_CURRENT
+    default 4 if USER_DISPLAY_ST7796S
     default 4 if USER_DISPLAY_ST7796S_TEST
     default 13 if USER_DISPLAY_ST7789_HW657A
     default 4
 
 config USER_SEN54_SCL_GPIO
     int
-    default 5 if USER_DISPLAY_ST7796S_CURRENT
+    default 5 if USER_DISPLAY_ST7796S
     default 5 if USER_DISPLAY_ST7796S_TEST
     default 14 if USER_DISPLAY_ST7789_HW657A
     default 5
 
 config USER_SENSOR_DS18B20
     bool
-    default y if USER_DISPLAY_ST7796S_CURRENT
+    default y if USER_DISPLAY_ST7796S
     default y if USER_DISPLAY_ST7796S_TEST
     default n if USER_DISPLAY_ST7789_HW657A
     default n

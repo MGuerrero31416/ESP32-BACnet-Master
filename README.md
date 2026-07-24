@@ -28,14 +28,8 @@ Tested on a large Metasys ADX production site on three configurations:
 
 Select the target and display profile through ESP-IDF configuration.
 
-| Target            | Display profile            | DS18B20 default |
-| ----------------- | -------------------------- | --------------: |
-| ESP32-WROOM-32    | ST7789 170×320 HW657A      |        Disabled |
-| ESP32-S3          | ST7796S 480×320 current UI |         Enabled |
-| ESP32-S3          | ST7796S 480×320 test UI    |         Enabled |
-| ESP32 or ESP32-S3 | No display                 |    Configurable |
+* Read file [Profiles.md](/Profiles.md)
 
-The repository defaults target an ESP32-WROOM-32 with 4 MB flash, no PSRAM, a single application partition, and size-optimized compilation.
 
 ## BACnet Object Model
 
