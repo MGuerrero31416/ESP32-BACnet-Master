@@ -1,6 +1,7 @@
 #include "ds18b20_sensor_service.h"
 
 #include <math.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -15,14 +16,26 @@
 #include "bacnet/basic/object/ai.h"
 #include "bacnet/basic/object/av.h"
 
-#define DS18B20_AVERAGE_SAMPLE_COUNT 8U // Number of samples to average for AI8. Must be a power of two for efficient modulo operation.
+/*
+ * Number of recent DS18B20 measurements included in the
+ * rolling average.
+ *
+ * This does not need to be a power of two because the buffer
+ * index uses the modulo operator.
+ */
+#define DS18B20_AVERAGE_SAMPLE_COUNT 8U //
+
+/*
+ * Minimum corrected-temperature change required before AI8
+ * is updated.
+ *
+ * Offset changes are published immediately regardless of this
+ * deadband.
+ */
+#define DS18B20_UPDATE_DEADBAND_C 0.05f
 
 static const char *TAG = "ds18b20_service";
 
-/*
- * Four samples provide light filtering without making the
- * displayed temperature respond too slowly.
- */
 typedef struct {
     float samples[DS18B20_AVERAGE_SAMPLE_COUNT];
     float sum;
@@ -31,6 +44,24 @@ typedef struct {
 } ds18b20_average_filter_t;
 
 static ds18b20_average_filter_t ds18b20_filter;
+
+/*
+ * Last temperature actually published to the BACnet AI.
+ * Small changes are compared against this value.
+ */
+static float last_published_temperature;
+
+/*
+ * Last offset used during a successful cycle.
+ * Tracking it separately allows BACnet offset changes to take
+ * effect immediately, even when the resulting temperature
+ * change is smaller than the normal deadband.
+ */
+static float last_temperature_offset;
+
+_Static_assert(
+    DS18B20_AVERAGE_SAMPLE_COUNT > 0U,
+    "DS18B20_AVERAGE_SAMPLE_COUNT must be greater than zero");
 
 /*
  * Ensure User_Settings contains the BACnet objects required
@@ -48,8 +79,8 @@ _Static_assert(
  * Add one valid measurement to the rolling average.
  *
  * During startup, the average uses only the samples collected
- * so far. AI8 can therefore update immediately without waiting
- * for all four samples.
+ * so far. The BACnet AI can therefore update immediately
+ * without waiting for the full sample window.
  */
 static float ds18b20_average_update(
     ds18b20_average_filter_t *filter,
@@ -92,13 +123,23 @@ esp_err_t ds18b20_sensor_service_init(void)
         0,
         sizeof(ds18b20_filter));
 
+    /*
+     * Force the first valid measurement and first valid offset
+     * to be published.
+     */
+    last_published_temperature = NAN;
+    last_temperature_offset = NAN;
+
     ESP_LOGI(
         TAG,
-        "DS18B20 service initialized: AI%lu offset AV%lu",
+        "DS18B20 service initialized: AI%lu offset AV%lu "
+        "average=%u deadband=%.3f C",
         (unsigned long)user_ai_instance(
             USER_AI_DS18B20_TEMPERATURE),
         (unsigned long)user_av_instance(
-            USER_AV_DS18B20_TEMP_OFFSET));
+            USER_AV_DS18B20_TEMP_OFFSET),
+        (unsigned int)DS18B20_AVERAGE_SAMPLE_COUNT,
+        (double)DS18B20_UPDATE_DEADBAND_C);
 
     return ESP_OK;
 }
@@ -145,17 +186,46 @@ void ds18b20_sensor_service_cycle(void)
     }
 
     /*
-     * Apply the BACnet offset after averaging. Changes to AV5
-     * therefore take effect immediately instead of becoming
-     * part of the moving-average history.
+     * Apply the BACnet offset after averaging. Changes to the
+     * offset therefore take effect immediately instead of
+     * becoming part of the moving-average history.
      */
     float corrected_temperature =
         filtered_temperature +
         temperature_offset;
 
-    Analog_Input_Present_Value_Set(
-        temperature_ai,
-        corrected_temperature);
+    /*
+     * Publish when:
+     *
+     * 1. This is the first valid measurement.
+     * 2. The BACnet offset has changed.
+     * 3. The corrected temperature has moved by at least the
+     *    configured deadband from the last published value.
+     */
+    bool publish_temperature =
+        !isfinite(last_published_temperature) ||
+        !isfinite(last_temperature_offset) ||
+        temperature_offset != last_temperature_offset ||
+        fabsf(
+            corrected_temperature -
+            last_published_temperature) >=
+            DS18B20_UPDATE_DEADBAND_C;
+
+    if (publish_temperature) {
+        Analog_Input_Present_Value_Set(
+            temperature_ai,
+            corrected_temperature);
+
+        last_published_temperature =
+            corrected_temperature;
+    }
+
+    /*
+     * Store the offset after the publication decision so that
+     * an offset change is detected during the current cycle.
+     */
+    last_temperature_offset =
+        temperature_offset;
 
     Analog_Input_Reliability_Set(
         temperature_ai,
@@ -164,9 +234,11 @@ void ds18b20_sensor_service_cycle(void)
     ESP_LOGD(
         TAG,
         "DS18B20: raw=%.3f C average=%.3f C "
-        "offset=%.2f C corrected=%.3f C",
+        "offset=%.2f C corrected=%.3f C "
+        "published=%s",
         raw_temperature,
         filtered_temperature,
         temperature_offset,
-        corrected_temperature);
+        corrected_temperature,
+        publish_temperature ? "yes" : "no");
 }
