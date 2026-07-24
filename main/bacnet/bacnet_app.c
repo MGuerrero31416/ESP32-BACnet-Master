@@ -20,6 +20,7 @@
 #include "bacnet/basic/object/device.h"
 #include "bacnet/basic/npdu/h_npdu.h"
 #include "bacnet/basic/service/h_cov.h"
+#include "bacnet/cov.h"
 #include "bacnet/basic/service/h_iam.h"
 #include "bacnet/basic/service/h_rp.h"
 #include "bacnet/basic/service/h_rpm.h"
@@ -917,13 +918,41 @@ static void profiled_handler_subscribe_cov_property(
     BACNET_ADDRESS *src,
     BACNET_CONFIRMED_SERVICE_DATA *service_data)
 {
-    ESP_LOGI(
-        TAG,
-        "SubscribeCOVProperty handler RX: mac_len=%u mac=%u invoke=%u len=%u",
-        (unsigned)(src ? src->mac_len : 0),
-        (unsigned)((src && src->mac_len) ? src->mac[0] : 0),
-        (unsigned)(service_data ? service_data->invoke_id : 0),
-        (unsigned)service_len);
+    BACNET_SUBSCRIBE_COV_DATA cov_data = {0};
+
+    int decode_len =
+        cov_subscribe_property_decode_service_request(
+            service_request,
+            service_len,
+            &cov_data);
+
+    if (decode_len > 0) {
+        ESP_LOGI(
+            TAG,
+            "SubscribeCOVProperty RX: "
+            "type=%u instance=%lu property=%u "
+            "confirmed=%u lifetime=%lu "
+            "mac_len=%u mac=%u",
+            (unsigned)cov_data.monitoredObjectIdentifier.type,
+            (unsigned long)
+                cov_data.monitoredObjectIdentifier.instance,
+            (unsigned)
+                cov_data.monitoredProperty.property_identifier,
+            cov_data.issueConfirmedNotifications ? 1U : 0U,
+            (unsigned long)cov_data.lifetime,
+            (unsigned)(src ? src->mac_len : 0),
+            (unsigned)(
+                (src && src->mac_len)
+                    ? src->mac[0]
+                    : 0));
+    } else {
+        ESP_LOGW(
+            TAG,
+            "SubscribeCOVProperty decode failed: "
+            "result=%d len=%u",
+            decode_len,
+            (unsigned)service_len);
+    }
 
     handler_cov_subscribe_property(
         service_request,
