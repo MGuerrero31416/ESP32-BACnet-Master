@@ -65,34 +65,12 @@ void bacnet_nvs_save_bv_desc(uint32_t instance, const char *desc, uint16_t lengt
     }
 }
 
-void bacnet_nvs_save_bv_pv(uint32_t instance, uint8_t value) {
-    nvs_handle_t nvs_handle;
-    char key[32];
-    esp_err_t err;
-    snprintf(key, sizeof(key), "binary_%lu_val", (unsigned long)instance);
-    if ((err = nvs_open(NVS_NAMESPACE, NVS_READWRITE, &nvs_handle)) == ESP_OK) {
-        if ((err = nvs_set_u8(nvs_handle, key, value)) == ESP_OK) {
-            if ((err = nvs_commit(nvs_handle)) == ESP_OK) {
-                ESP_LOGI(TAG, "Saved BV%lu value: %u", (unsigned long)instance, value);
-            } else {
-                ESP_LOGE(TAG, "NVS commit failed for BV%lu value: %d", (unsigned long)instance, err);
-            }
-        } else {
-            ESP_LOGE(TAG, "NVS set_u8 failed for BV%lu value: %d", (unsigned long)instance, err);
-        }
-        nvs_close(nvs_handle);
-    } else {
-        ESP_LOGE(TAG, "NVS open failed for BV%lu value: %d", (unsigned long)instance, err);
-    }
-}
-
 void bacnet_nvs_load_bv(uint32_t instance) {
     nvs_handle_t nvs_handle;
     char key[32];
     static char bv_names[USER_BV_COUNT][65];  /* Persistent storage for loaded names */
     static char bv_descs[USER_BV_COUNT][129];  /* Persistent storage for loaded descriptions */
     uint8_t idx = (instance > 0 && instance <= 4) ? (instance - 1) : 0;
-    uint8_t pv = BINARY_INACTIVE;
     size_t len;
 
     if (nvs_open(NVS_NAMESPACE, NVS_READONLY, &nvs_handle) != ESP_OK) {
@@ -109,11 +87,6 @@ void bacnet_nvs_load_bv(uint32_t instance) {
     len = sizeof(bv_descs[idx]);
     if (nvs_get_str(nvs_handle, key, bv_descs[idx], &len) == ESP_OK) {
         Binary_Value_Description_Set(instance, bv_descs[idx]);
-    }
-
-    snprintf(key, sizeof(key), "binary_%lu_val", (unsigned long)instance);
-    if (nvs_get_u8(nvs_handle, key, &pv) == ESP_OK) {
-        Binary_Value_Present_Value_Set(instance, (BACNET_BINARY_PV)pv);
     }
 
     nvs_close(nvs_handle);

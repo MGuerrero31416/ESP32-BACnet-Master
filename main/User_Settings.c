@@ -22,7 +22,7 @@ const char USER_WIFI_STATIC_DNS[] = "8.8.8.8";
 /* BACnet device settings */
 const char USER_BACNET_DEVICE_NAME[] = "ESP32_55533";
 const uint32_t USER_BACNET_DEVICE_INSTANCE = 55533;
-const int USER_OVERRIDE_NVS_ON_FLASH = 1; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
+const int USER_OVERRIDE_NVS_ON_FLASH = 0; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
 
 /* BACnet device identity settings */
 const char USER_BACNET_DEVICE_DESCRIPTION[] = "ESP32 BACnet Master";

@@ -4,6 +4,11 @@ Configurable ESP32/ESP32-S3 BACnet device for Sensirion SEN54 air-quality monito
 
 The project supports multiple hardware profiles while keeping BACnet identity, transport settings, object mappings, defaults, and persistence configuration centralized in `main/User_Settings.c`.
 
+Tested on a large Metasys ADX production site on three configurations:
+* SNE MS/TP bus
+* MS/TP on a BACRouter-S MS/TP to Ethernet router
+* BACnet IP WIFi to Vonets VAP11G-300 Wifi Repeater/Bridge
+
 ## Features
 
 * BACnet/IP over Wi-Fi

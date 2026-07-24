@@ -311,10 +311,6 @@ static bool sen54_av_write_request_callback(
             (float)verified_seconds,
             16);
 
-        bacnet_nvs_save_av_pv(
-            sen54_av1_instance(),
-            (float)verified_seconds);
-
         if (applied_value) {
             *applied_value = (float)verified_seconds;
         }
@@ -386,16 +382,6 @@ static bool sen54_av_write_request_callback(
         (float)current.time_constant_seconds,
         16);
 
-    bacnet_nvs_save_av_pv(
-        sen54_av2_instance(),
-        raw_offset_to_c(current.raw_offset));
-    bacnet_nvs_save_av_pv(
-        sen54_av3_instance(),
-        raw_slope_to_ratio(current.raw_slope));
-    bacnet_nvs_save_av_pv(
-        sen54_av4_instance(),
-        (float)current.time_constant_seconds);
-
     if (applied_value) {
         if (object_instance == sen54_av2_instance()) {
             *applied_value = raw_offset_to_c(current.raw_offset);
@@ -425,10 +411,13 @@ esp_err_t sen54_bacnet_config_startup_sync(void)
     }
 
     sen54_raw_config_t target = sensor_values;
+    sen54_raw_config_t saved_values = {0};
     bool have_saved_values = false;
+    bool saved_config_exists = load_saved_config_if_complete(&saved_values);
 
-    if (!app_storage_override_enabled()) {
-        have_saved_values = load_saved_config_if_complete(&target);
+    if (!app_storage_override_enabled() && saved_config_exists) {
+        target = saved_values;
+        have_saved_values = true;
     }
 
     if (have_saved_values) {
@@ -442,7 +431,9 @@ esp_err_t sen54_bacnet_config_startup_sync(void)
     }
 
     publish_raw_config_to_bacnet(&target);
-    persist_raw_config_to_nvs(&target);
+    if (!saved_config_exists) {
+        persist_raw_config_to_nvs(&target);
+    }
 
     ESP_LOGI(
         TAG,
@@ -470,7 +461,6 @@ esp_err_t sen54_bacnet_config_reapply_saved(void)
     }
 
     publish_raw_config_to_bacnet(&target);
-    persist_raw_config_to_nvs(&target);
 
     return ESP_OK;
 }

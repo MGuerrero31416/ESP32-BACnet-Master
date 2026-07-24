@@ -34,7 +34,6 @@
 /* External NVS callbacks (from main.c if available) */
 extern void bacnet_nvs_save_bv_name(uint32_t instance, const char *name, uint16_t length);
 extern void bacnet_nvs_save_bv_desc(uint32_t instance, const char *desc, uint16_t length);
-extern void bacnet_nvs_save_bv_pv(uint32_t instance, uint8_t value);
 
 static const char *Default_Active_Text = "Active";
 static const char *Default_Inactive_Text = "Inactive";
@@ -1106,10 +1105,6 @@ bool Binary_Value_Write_Property(BACNET_WRITE_PROPERTY_DATA *wp_data)
                 status = Binary_Value_Present_Value_Write(
                     wp_data->object_instance, write_value,
                     &wp_data->error_class, &wp_data->error_code);
-                if (status) {
-                    bacnet_nvs_save_bv_pv(wp_data->object_instance,
-                        (uint8_t)write_value);
-                }
             }
             break;
         case PROP_OUT_OF_SERVICE:
