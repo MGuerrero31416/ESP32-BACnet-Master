@@ -1,0 +1,24 @@
+# ESP32-S3 target defaults
+# Original ESP32-S3 hardware profile:
+# - 16 MB flash
+# - 8 MB external PSRAM
+# - Large single-application partition table
+# This file is loaded only when the ESP-IDF target is esp32s3.
+# A base sdkconfig.defaults file must also exist.
+# Do not place ESP32-WROOM-32 flash, PSRAM, or partition settings
+# in the common sdkconfig.defaults file.
+
+# Flash
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="16MB"
+
+# External PSRAM
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_QUAD=y
+CONFIG_SPIRAM_SPEED_80M=y
+CONFIG_SPIRAM_TYPE_AUTO=y
+CONFIG_SPIRAM_IGNORE_NOTFOUND=y
+
+# Partition table
+CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y
+CONFIG_PARTITION_TABLE_FILENAME="partitions_singleapp_large.csv"

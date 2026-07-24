@@ -1,19 +1,29 @@
-# Hardware profile: ESP32 HW657A (ESP32-WROOM-32) with 4MB flash and no PSRAM
-CONFIG_FREERTOS_HZ=1000
-CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
-CONFIG_ESPTOOLPY_FLASHSIZE="4MB"
-# CONFIG_SPIRAM is not set
-CONFIG_PARTITION_TABLE_SINGLE_APP=y
-CONFIG_PARTITION_TABLE_FILENAME="partitions_singleapp.csv"
+# Common project defaults
+# Target-specific flash, PSRAM, and partition settings belong in:
+# sdkconfig.defaults.esp32
+# sdkconfig.defaults.esp32s3
 
-# Memory optimization profile (keep WiFi/BACnet-IP features intact)
+# FreeRTOS
+
+CONFIG_FREERTOS_HZ=1000
+
+# Memory optimization profile
+
 CONFIG_COMPILER_OPTIMIZATION_SIZE=y
+
 # CONFIG_COMPILER_OPTIMIZATION_DEBUG is not set
+
+# Save IRAM while retaining Wi-Fi and BACnet/IP functionality
+
 # CONFIG_ESP_WIFI_IRAM_OPT is not set
+
+# Disable unused networking features
+
 # CONFIG_LWIP_IPV6 is not set
+
 # CONFIG_FMB_MDNS_INTEGRATION_ENABLE is not set
 
 # TLS certificate bundle for secure MQTT connections
+
 CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
-CONFIG_MBEDTLS_DEFAULT_CERTIFICATE_BUNDLE=y
 CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL=y

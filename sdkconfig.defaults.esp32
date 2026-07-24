@@ -1,0 +1,21 @@
+# ESP32 target defaults
+# ESP32-WROOM-32 / HW657A hardware:
+# - 4 MB flash
+# - No external PSRAM
+# - Single-application partition table
+# This file is applied only when the ESP-IDF target is esp32.
+# The common sdkconfig.defaults file must also exist.
+
+# Flash size
+
+CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="4MB"
+
+# External PSRAM is not available on this hardware
+
+# CONFIG_SPIRAM is not set
+
+# Partition table
+
+CONFIG_PARTITION_TABLE_SINGLE_APP=y
+CONFIG_PARTITION_TABLE_FILENAME="partitions_singleapp.csv"

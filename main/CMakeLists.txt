@@ -28,7 +28,7 @@ set(APP_SRCS
 
 if(CONFIG_USER_DISPLAY_ST7796S)
     list(APPEND APP_SRCS
-        "ui/profiles/display_st7796s_current.cpp"
+        "ui/profiles/display_st7796s.cpp"
     )
 
 elseif(CONFIG_USER_DISPLAY_ST7796S_TEST)

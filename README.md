@@ -2,12 +2,12 @@
 
 Configurable ESP32/ESP32-S3 BACnet device for Sensirion SEN54 air-quality monitoring, optional DS18B20 temperature sensing, local display, BACnet/IP, BACnet MS/TP, and optional Adafruit IO publishing.
 
-The project supports multiple hardware profiles while keeping BACnet identity, transport settings, object mappings, defaults, and persistence configuration centralized in `main/User_Settings.c`.
+The project supports ESP32 and ESP32-S3 targets with selectable display/UI profiles, while keeping BACnet identity, transport settings, object mappings, defaults, and persistence configuration centralized in `main/User_Settings.c`.
 
 Tested on a large Metasys ADX production site on three configurations:
 * SNE MS/TP bus
 * MS/TP on a BACRouter-S MS/TP to Ethernet router
-* BACnet IP WIFi to Vonets VAP11G-300 Wifi Repeater/Bridge
+* BACnet/IP over Wi-Fi to Vonets VAP11G-300 Wifi Repeater/Bridge
 
 ## Features
 
@@ -24,11 +24,12 @@ Tested on a large Metasys ADX production site on three configurations:
 * Startup settings report and FreeRTOS stack monitoring
 * Private credentials excluded from source control
 
-## Hardware Profiles
+## Target and Display Selection
 
 Select the target and display profile through ESP-IDF configuration.
 
 * Read file [Profiles.md](/Profiles.md)
+- [`Profiles.md`](Profiles.md) — display/UI profiles, panel wiring and profile selection
 
 
 ## BACnet Object Model
@@ -143,7 +144,7 @@ main/
 │   └── objects/         AI, AV, BI, BV and BO implementations
 ├── platform/            Wi-Fi and MS/TP RS485 interfaces
 ├── ui/
-│   └── profiles/        Hardware-specific display implementations
+│   └── profiles/        Selectable display/UI implementations
 ├── User_Settings.c      Device and BACnet configuration
 ├── User_Settings.h      Object counts and logical role definitions
 └── main.c               Application startup
