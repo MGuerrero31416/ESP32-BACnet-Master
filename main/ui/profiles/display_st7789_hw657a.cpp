@@ -66,6 +66,15 @@ extern "C" void display_init(void)
 #endif
 
     tft.init();
+
+    #if defined(TFT_BL) && (TFT_BL >= 0)
+        if (ledcAttach(TFT_BL, 20000, 8)) {
+            ledcWrite(TFT_BL, 125);  // 25% brightness: 64 out of 255
+        } else {
+            ESP_LOGW(TAG, "Failed to initialize backlight PWM");
+        }
+    #endif
+
     tft.setRotation(1);
     tft.fillScreen(TFT_BLACK);
 
