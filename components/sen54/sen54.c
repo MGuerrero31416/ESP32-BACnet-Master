@@ -357,36 +357,74 @@ float sen54_get_nox_index(void)   { SEN54_GETTER(nox_index) }
 
 esp_err_t sen54_full_reset(void)
 {
-    // Send I2C command 0xD304 (Device Reset).
-    // This clears all sensor state including VOC/NOx algorithm baselines.
-    // The sensor needs ~1 s to complete its start-up sequence before it
-    // will ACK further commands, after which measurement is restarted.
+    /*
+     * Send Device Reset command 0xD304.
+     *
+     * The reset clears volatile settings, including the fan
+     * auto-cleaning interval and temperature-compensation
+     * parameters.
+     */
     esp_err_t ret = sen54_i2c_transaction_begin();
+
     if (ret != ESP_OK) {
         return ret;
     }
 
     ret = sen54_write_cmd(SEN54_CMD_RESET);
+
     sen54_i2c_transaction_end();
+
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "SEN54 full reset command failed (%d)", ret);
+        ESP_LOGE(
+            TAG,
+            "SEN54 full reset command failed (%d)",
+            ret);
+
         return ret;
     }
-    ESP_LOGI(TAG, "SEN54 full reset (0xD304) sent");
-    vTaskDelay(pdMS_TO_TICKS(1200));  /* datasheet: device ready after ~1 s */
+
+    ESP_LOGI(
+        TAG,
+        "SEN54 full reset (0xD304) sent");
+
+    /*
+     * Allow the SEN54 to finish its reset and return to Idle.
+     */
+    vTaskDelay(pdMS_TO_TICKS(1200));
+
     ret = sen54_i2c_transaction_begin();
+
     if (ret != ESP_OK) {
         return ret;
     }
 
-    ret = sen54_write_cmd(SEN54_CMD_START_MEASUREMENT);
+    ret = sen54_write_cmd(
+        SEN54_CMD_START_MEASUREMENT);
+
     sen54_i2c_transaction_end();
+
     if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "SEN54 restart measurement after reset failed (%d)", ret);
-    } else {
-        ESP_LOGI(TAG, "SEN54 measurement restarted after full reset");
+        ESP_LOGE(
+            TAG,
+            "SEN54 restart measurement after reset "
+            "failed (%d)",
+            ret);
+
+        return ret;
     }
-    return ret;
+
+    /*
+     * Start Measurement can require up to 50 ms to complete.
+     * Do not allow the caller to send configuration commands
+     * while that command is still being processed.
+     */
+    vTaskDelay(pdMS_TO_TICKS(100));
+
+    ESP_LOGI(
+        TAG,
+        "SEN54 measurement restarted after full reset");
+
+    return ESP_OK;
 }
 
 esp_err_t sen54_get_fan_auto_cleaning_interval_seconds(uint32_t *seconds)
