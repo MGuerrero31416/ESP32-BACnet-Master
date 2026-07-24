@@ -15,7 +15,7 @@
 #include "bacnet/basic/object/ai.h"
 #include "bacnet/basic/object/av.h"
 
-#define DS18B20_AVERAGE_SAMPLE_COUNT 4U
+#define DS18B20_AVERAGE_SAMPLE_COUNT 8U // Number of samples to average for AI8. Must be a power of two for efficient modulo operation.
 
 static const char *TAG = "ds18b20_service";
 
