@@ -104,9 +104,9 @@ void app_supervisor_run(void)
         /*
          * Print stack diagnostics every 30 seconds.
          */
-        if (++stack_report_tick % 30 == 0) {
-            stack_profiler_log_report();
-        }
+//        if (++stack_report_tick % 30 == 0) {
+//            stack_profiler_log_report();
+//        }
 
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
