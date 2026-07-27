@@ -34,6 +34,7 @@ static bool s_lvgl_inited;
 typedef enum {
     UI_SCREEN_MEASUREMENTS = 0,
     UI_SCREEN_PLACEHOLDER,
+    UI_SCREEN_PLACEHOLDER_2,
 } ui_screen_t;
 
 typedef struct {
@@ -53,6 +54,7 @@ typedef struct {
 
 static measurements_screen_t s_measurements_screen = {};
 static placeholder_screen_t s_placeholder_screen = {};
+static placeholder_screen_t s_placeholder_screen_2 = {};
 static ui_screen_t s_active_screen = UI_SCREEN_MEASUREMENTS;
 static float s_latest_pm25;
 static float s_latest_temperature;
@@ -137,6 +139,12 @@ static void show_screen(ui_screen_t screen_id)
     if (screen_id == UI_SCREEN_PLACEHOLDER && s_placeholder_screen.screen != NULL) {
         lv_scr_load(s_placeholder_screen.screen);
         s_active_screen = UI_SCREEN_PLACEHOLDER;
+        return;
+    }
+
+    if (screen_id == UI_SCREEN_PLACEHOLDER_2 && s_placeholder_screen_2.screen != NULL) {
+        lv_scr_load(s_placeholder_screen_2.screen);
+        s_active_screen = UI_SCREEN_PLACEHOLDER_2;
     }
 }
 
@@ -238,23 +246,55 @@ static void create_placeholder_screen(void)
     set_screen_border(screen);
 
     s_placeholder_screen.title_label = lv_label_create(screen);
-    lv_label_set_text(s_placeholder_screen.title_label, "Placeholder");
+    lv_label_set_text(s_placeholder_screen.title_label, "Placeholder 1");
     lv_obj_set_pos(s_placeholder_screen.title_label, 94, 34);
     lv_obj_set_style_text_font(s_placeholder_screen.title_label, &lv_font_montserrat_20, 0);
     lv_obj_set_style_text_color(s_placeholder_screen.title_label, lv_color_hex(0xFFFFFF), 0);
 
     s_placeholder_screen.body_label = lv_label_create(screen);
-    lv_label_set_text(s_placeholder_screen.body_label, "Second screen placeholder");
+    lv_label_set_text(s_placeholder_screen.body_label, "Second screen");
     lv_obj_set_pos(s_placeholder_screen.body_label, 44, 74);
     lv_obj_set_style_text_font(s_placeholder_screen.body_label, &lv_font_montserrat_20, 0);
-    lv_obj_set_style_text_color(s_placeholder_screen.body_label, lv_color_hex(0xBDBDBD), 0);
+    lv_obj_set_style_text_color(s_placeholder_screen.body_label, lv_color_hex(0xBDBDBD), 0); //
 
     s_placeholder_screen.left_arrow = create_nav_arrow_button(
         screen,
         "<",
         LV_ALIGN_LEFT_MID,
         UI_SCREEN_MEASUREMENTS);
-    s_placeholder_screen.right_arrow = create_nav_arrow(screen, ">", LV_ALIGN_RIGHT_MID);
+    s_placeholder_screen.right_arrow = create_nav_arrow_button(
+        screen,
+        ">",
+        LV_ALIGN_RIGHT_MID,
+        UI_SCREEN_PLACEHOLDER_2);
+}
+
+static void create_placeholder_screen_2(void)
+{
+    lv_obj_t *screen = lv_obj_create(NULL);
+    s_placeholder_screen_2.screen = screen;
+
+    set_screen_bg(screen); // Set a black background for the screen
+  //  set_screen_border(screen); // Set a magenta border for debugging
+
+    s_placeholder_screen_2.title_label = lv_label_create(screen);   // Create a new label object for the title
+    lv_label_set_text(s_placeholder_screen_2.title_label, "Placeholder 2"); // Set the text of the title label
+    lv_obj_set_pos(s_placeholder_screen_2.title_label, 84, 34); // Set position of the title label
+    lv_obj_set_style_text_font(s_placeholder_screen_2.title_label, &lv_font_montserrat_20, 0); // Set font for the title label
+    lv_obj_set_style_text_color(s_placeholder_screen_2.title_label, lv_color_hex(0xFFFFFF), 0); // Set text color for the title label
+
+    s_placeholder_screen_2.body_label = lv_label_create(screen); // Create a new label object for the body
+    lv_label_set_text(s_placeholder_screen_2.body_label, "Third screen"); // Set the text of the body label
+    lv_obj_set_pos(s_placeholder_screen_2.body_label, 44, 74); // Set position of the body label
+    lv_obj_set_style_text_font(s_placeholder_screen_2.body_label, &lv_font_montserrat_20, 0); // Set font for the body label
+    lv_obj_set_style_text_color(s_placeholder_screen_2.body_label, lv_color_hex(0xBDBDBD), 0); // Set text color for the body label
+
+    s_placeholder_screen_2.left_arrow = create_nav_arrow_button( // Create a navigation arrow button for the left arrow
+        screen,
+        "<", // Set the text of the left arrow to "<"
+        LV_ALIGN_LEFT_MID, // Align the left arrow to the left middle of the screen
+        UI_SCREEN_PLACEHOLDER); // Set the next screen to navigate to when the left arrow is clicked
+    s_placeholder_screen_2.right_arrow = create_nav_arrow(screen, ">", LV_ALIGN_RIGHT_MID); // Create a navigation arrow for the right arrow (no click event)
 }
 
 static void lvgl_flush_cb(
@@ -361,6 +401,7 @@ static void lvgl_init(void)
 
     create_measurements_screen();
     create_placeholder_screen();
+    create_placeholder_screen_2();
     show_screen(UI_SCREEN_MEASUREMENTS);
 
     if (xTaskCreate(
