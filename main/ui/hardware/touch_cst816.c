@@ -9,7 +9,7 @@
 #include "driver/gpio.h"
 #include "driver/i2c.h"
 #include "esp_log.h"
-#include "esp_timer.h"
+//#include "esp_timer.h" // Uncomment if you want to log touch coordinates every 250ms when pressed
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
@@ -28,7 +28,7 @@
 #define TOUCH_LANDSCAPE_H 170U
 
 static bool s_inited = false;
-static int64_t s_last_log_us = 0;
+// static int64_t s_last_log_us = 0; // Uncomment if you want to log touch coordinates every 250ms when pressed
 
 static inline uint16_t clamp_u16(uint16_t v, uint16_t maxv)
 {
@@ -153,6 +153,7 @@ esp_err_t touch_cst816_read(touch_cst816_point_t *pt)
     pt->x = clamp_u16(map_x, (uint16_t)(TOUCH_LANDSCAPE_W - 1U));
     pt->y = clamp_u16(map_y, (uint16_t)(TOUCH_LANDSCAPE_H - 1U));
 
+    /* LOGGING: Uncomment the following block to log touch coordinates every 250ms when pressed
     if (pt->pressed) {
         const int64_t now = esp_timer_get_time();
         if ((now - s_last_log_us) >= 250000) {
@@ -164,7 +165,7 @@ esp_err_t touch_cst816_read(touch_cst816_point_t *pt)
                      (unsigned int)pt->x,
                      (unsigned int)pt->y);
         }
-    }
+    }*/
 
     return ESP_OK;
 }
