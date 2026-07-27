@@ -1,0 +1,61 @@
+ESP32-S3 R8 LilyGO T-Display
+CAP. CST816 Touch Function 
+1.9inch 8bit LCD 170x320 ST7789
+
+/* Interface Selection Constants */
+#define BOARD_LCD_INTERFACE_SPI    0
+#define BOARD_LCD_INTERFACE_I80    1
+
+/* Display Frame Setup */
+#define BOARD_DISPLAY_ENABLED      1
+#define BOARD_DISPLAY_TYPE_ST7789  1
+#define BOARD_LCD_INTERFACE        BOARD_LCD_INTERFACE_I80
+#define BOARD_LCD_WIDTH            170
+#define BOARD_LCD_HEIGHT           320
+
+/* LilyGO T-Display-S3 (1.9 inch) I80 8-Bit Parallel Pinout */
+#define BOARD_LCD_PIN_NUM_D0       39
+#define BOARD_LCD_PIN_NUM_D1       40
+#define BOARD_LCD_PIN_NUM_D2       41
+#define BOARD_LCD_PIN_NUM_D3       42
+#define BOARD_LCD_PIN_NUM_D4       45
+#define BOARD_LCD_PIN_NUM_D5       46
+#define BOARD_LCD_PIN_NUM_D6       47
+#define BOARD_LCD_PIN_NUM_D7       48
+// Control
+#define BOARD_LCD_PIN_NUM_WR       8
+#define BOARD_LCD_PIN_NUM_RD       9
+#define BOARD_LCD_PIN_NUM_CS       6
+#define BOARD_LCD_PIN_NUM_DC       7
+#define BOARD_LCD_PIN_NUM_RST      5
+
+/* Power & Backlight Control */
+#define BOARD_LCD_POWER_EN_PIN     15   // Vital: Powers screen & onboard V3V
+#define BOARD_LCD_POWER_ON_LEVEL   1    // Must write HIGH to activate power
+#define BOARD_LCD_PIN_NUM_BK_LIGHT 38
+#define BOARD_LCD_BK_LIGHT_ON_LEVEL 1   // HIGH turns backlight on
+
+/* Touch Controller (CST816) */
+#define BOARD_TOUCH_ENABLED        1
+#define BOARD_TOUCH_I2C_PORT       0
+#define BOARD_TOUCH_I2C_SDA_PIN    18
+#define BOARD_TOUCH_I2C_SCL_PIN    17
+#define BOARD_TOUCH_I2C_ADDR       0x15
+#define BOARD_TOUCH_PIN_NUM_INT    16
+#define BOARD_TOUCH_PIN_NUM_RST    21
+
+/* Onboard Buttons */
+#define BOARD_BUTTON_BOOT          0    // Physical BOOT button (0 = Pressed)
+#define BOARD_BUTTON_USER          14   // Physical Key button on GPIO14 (0 = Pressed)
+
+/* Battery Voltage Monitoring Sensor */
+#define BOARD_BAT_ADC_PIN          4    // Connected to a voltage divider (100k/100k)
+
+/* Display mode - settings */
+#define LCD_PIXEL_CLOCK_HZ (20 * 1000 * 1000)
+#define LCD_H_RES 170
+#define LCD_V_RES 320
+#define LCD_GAP_X 0
+#define LCD_GAP_Y 35
+
+

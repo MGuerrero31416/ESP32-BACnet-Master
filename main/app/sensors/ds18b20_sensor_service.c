@@ -23,7 +23,7 @@
  * This does not need to be a power of two because the buffer
  * index uses the modulo operator.
  */
-#define DS18B20_AVERAGE_SAMPLE_COUNT 8U //
+#define DS18B20_AVERAGE_SAMPLE_COUNT 10U //
 
 /*
  * Minimum corrected-temperature change required before AI8
@@ -32,7 +32,7 @@
  * Offset changes are published immediately regardless of this
  * deadband.
  */
-#define DS18B20_UPDATE_DEADBAND_C 0.05f
+#define DS18B20_UPDATE_DEADBAND_C 0.1f
 
 static const char *TAG = "ds18b20_service";
 

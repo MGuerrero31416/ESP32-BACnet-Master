@@ -30,8 +30,8 @@ const char USER_BACNET_MODEL_NAME[] = "ESP32-WROOM32-SEN54-ST7789";
 const char USER_BACNET_VENDOR_NAME[] = "ESCAP FMS";
 const uint16_t USER_BACNET_VENDOR_ID = 260;
 const char USER_BACNET_LOCATION[] = "SEC-B Ground Floor FMS";
-const char USER_BACNET_FIRMWARE_REVISION[] = "1.6";
-const char USER_BACNET_APPLICATION_SOFTWARE_VERSION[] = "1.6";
+const char USER_BACNET_FIRMWARE_REVISION[] = "1.7";
+const char USER_BACNET_APPLICATION_SOFTWARE_VERSION[] = "1.7";
 const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
@@ -323,8 +323,8 @@ void User_Settings_InitDeviceIdentity(void)
 void User_Settings_Print(void)
 {
 #if USER_SETTINGS_PRINT_ENABLE
-    ESP_LOGI(TAG_USER_SETTINGS, "====================================");
-    ESP_LOGI(TAG_USER_SETTINGS, "=========== User Settings ==========");
+    ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
+    ESP_LOGI(TAG_USER_SETTINGS, "===================== User Settings ====================");
 
     ESP_LOGI(TAG_USER_SETTINGS, "[Wi-Fi / BACnet-IP]");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_ENABLE_BACNET_IP: %s", USER_ENABLE_BACNET_IP ? "true" : "false");
@@ -376,7 +376,7 @@ void User_Settings_Print(void)
     ESP_LOGI(TAG_USER_SETTINGS, "USER_MSTP_MAX_MASTER: %" PRIu8, USER_MSTP_MAX_MASTER);
     ESP_LOGI(TAG_USER_SETTINGS, "USER_MSTP_BAUD_RATE: %" PRIu32, USER_MSTP_BAUD_RATE);
 
-    ESP_LOGI(TAG_USER_SETTINGS, "====================================");
-    ESP_LOGI(TAG_USER_SETTINGS, "====================================");
+    ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
+    ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
 #endif
 }

@@ -7,6 +7,11 @@
 
 #include "User_Setups/Setup_Project_ST7796S.h"
 
+#elif defined(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
+
+#include "User_Setups/Setup_Project_ST7789_TDISPLAY_S3.h"
+
+
 #elif defined(CONFIG_USER_DISPLAY_ST7789_HW657A)
 
 #include "User_Setups/Setup_Project_ST7789_HW657A.h"

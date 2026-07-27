@@ -36,6 +36,16 @@ elseif(CONFIG_USER_DISPLAY_ST7796S_TEST)
         "ui/profiles/display_st7796s_test.cpp"
     )
 
+elseif(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
+    list(APPEND APP_SRCS
+        "ui/profiles/display_st7789_tdisplay_s3.cpp"
+    )
+
+elseif(CONFIG_USER_DISPLAY_ST7789_HW657A)
+    list(APPEND APP_SRCS
+        "ui/profiles/display_st7789_hw657a.cpp"
+    )
+
 elseif(CONFIG_USER_DISPLAY_ST7789_HW657A)
     list(APPEND APP_SRCS
         "ui/profiles/display_st7789_hw657a.cpp"
