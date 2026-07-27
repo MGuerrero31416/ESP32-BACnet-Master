@@ -35,6 +35,7 @@ typedef enum {
     UI_SCREEN_MEASUREMENTS = 0,
     UI_SCREEN_PLACEHOLDER,
     UI_SCREEN_PLACEHOLDER_2,
+    UI_SCREEN_WIFI_SETTINGS,
 } ui_screen_t;
 
 typedef struct {
@@ -55,6 +56,7 @@ typedef struct {
 static measurements_screen_t s_measurements_screen = {};
 static placeholder_screen_t s_placeholder_screen = {};
 static placeholder_screen_t s_placeholder_screen_2 = {};
+static placeholder_screen_t s_wifi_settings_screen = {};
 static ui_screen_t s_active_screen = UI_SCREEN_MEASUREMENTS;
 static float s_latest_pm25;
 static float s_latest_temperature;
@@ -63,6 +65,15 @@ static float s_latest_voc;
 
 static const lv_coord_t UI_SCREEN_MARGIN_X = 14;
 static const lv_coord_t UI_NAV_ARROW_INSET = 8;
+
+static void nav_button_event_cb(lv_event_t *e);
+
+static void add_click_nav_target(lv_obj_t *obj, ui_screen_t next_screen)
+{
+    lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_set_ext_click_area(obj, 10);
+    lv_obj_add_event_cb(obj, nav_button_event_cb, LV_EVENT_CLICKED, (void *)(uintptr_t)next_screen);
+}
 
 static void set_screen_bg(lv_obj_t *screen)
 {
@@ -145,6 +156,12 @@ static void show_screen(ui_screen_t screen_id)
     if (screen_id == UI_SCREEN_PLACEHOLDER_2 && s_placeholder_screen_2.screen != NULL) {
         lv_scr_load(s_placeholder_screen_2.screen);
         s_active_screen = UI_SCREEN_PLACEHOLDER_2;
+        return;
+    }
+
+    if (screen_id == UI_SCREEN_WIFI_SETTINGS && s_wifi_settings_screen.screen != NULL) {
+        lv_scr_load(s_wifi_settings_screen.screen);
+        s_active_screen = UI_SCREEN_WIFI_SETTINGS;
     }
 }
 
@@ -165,9 +182,7 @@ static lv_obj_t *create_nav_arrow_button(
     ui_screen_t next_screen)
 {
     lv_obj_t *arrow = create_nav_arrow(parent, text, align);
-    lv_obj_add_flag(arrow, LV_OBJ_FLAG_CLICKABLE);
-    lv_obj_set_ext_click_area(arrow, 10);
-    lv_obj_add_event_cb(arrow, nav_button_event_cb, LV_EVENT_CLICKED, (void *)(uintptr_t)next_screen);
+    add_click_nav_target(arrow, next_screen);
     return arrow;
 }
 
@@ -278,16 +293,35 @@ static void create_placeholder_screen_2(void)
   //  set_screen_border(screen); // Set a magenta border for debugging
 
     s_placeholder_screen_2.title_label = lv_label_create(screen);   // Create a new label object for the title
-    lv_label_set_text(s_placeholder_screen_2.title_label, "Placeholder 2"); // Set the text of the title label
-    lv_obj_set_pos(s_placeholder_screen_2.title_label, 84, 34); // Set position of the title label
+    lv_label_set_text(s_placeholder_screen_2.title_label, "Settings"); // Set the text of the title label
+    lv_obj_set_pos(s_placeholder_screen_2.title_label, 105, 16); // Set position of the title label
     lv_obj_set_style_text_font(s_placeholder_screen_2.title_label, &lv_font_montserrat_20, 0); // Set font for the title label
     lv_obj_set_style_text_color(s_placeholder_screen_2.title_label, lv_color_hex(0xFFFFFF), 0); // Set text color for the title label
 
-    s_placeholder_screen_2.body_label = lv_label_create(screen); // Create a new label object for the body
-    lv_label_set_text(s_placeholder_screen_2.body_label, "Third screen"); // Set the text of the body label
-    lv_obj_set_pos(s_placeholder_screen_2.body_label, 44, 74); // Set position of the body label
-    lv_obj_set_style_text_font(s_placeholder_screen_2.body_label, &lv_font_montserrat_20, 0); // Set font for the body label
-    lv_obj_set_style_text_color(s_placeholder_screen_2.body_label, lv_color_hex(0xBDBDBD), 0); // Set text color for the body label
+    lv_obj_t *wifi_tile = lv_obj_create(screen);
+    lv_obj_set_size(wifi_tile, 138, 92);
+    lv_obj_center(wifi_tile);
+    lv_obj_set_style_bg_color(wifi_tile, lv_color_hex(0x1E1E1E), 0);
+    lv_obj_set_style_bg_opa(wifi_tile, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_color(wifi_tile, lv_color_hex(0x3A7DFF), 0);
+    lv_obj_set_style_border_width(wifi_tile, 2, 0);
+    lv_obj_set_style_radius(wifi_tile, 14, 0);
+    lv_obj_set_style_pad_all(wifi_tile, 10, 0);
+    lv_obj_clear_flag(wifi_tile, LV_OBJ_FLAG_SCROLLABLE);
+
+    s_placeholder_screen_2.body_label = lv_label_create(wifi_tile); // Reused as tile icon object reference
+    lv_label_set_text(s_placeholder_screen_2.body_label, LV_SYMBOL_WIFI);
+    lv_obj_set_style_text_font(s_placeholder_screen_2.body_label, &lv_font_montserrat_24, 0);
+    lv_obj_set_style_text_color(s_placeholder_screen_2.body_label, lv_color_hex(0x00FFFF), 0);
+    lv_obj_align(s_placeholder_screen_2.body_label, LV_ALIGN_TOP_MID, 0, 6);
+
+    lv_obj_t *wifi_label = lv_label_create(wifi_tile);
+    lv_label_set_text(wifi_label, "Wi-Fi");
+    lv_obj_set_style_text_font(wifi_label, &lv_font_montserrat_20, 0);
+    lv_obj_set_style_text_color(wifi_label, lv_color_hex(0xFFFFFF), 0);
+    lv_obj_align(wifi_label, LV_ALIGN_BOTTOM_MID, 0, -6);
+
+    add_click_nav_target(wifi_tile, UI_SCREEN_WIFI_SETTINGS);
 
     s_placeholder_screen_2.left_arrow = create_nav_arrow_button( // Create a navigation arrow button for the left arrow
         screen,
@@ -295,6 +329,33 @@ static void create_placeholder_screen_2(void)
         LV_ALIGN_LEFT_MID, // Align the left arrow to the left middle of the screen
         UI_SCREEN_PLACEHOLDER); // Set the next screen to navigate to when the left arrow is clicked
     s_placeholder_screen_2.right_arrow = create_nav_arrow(screen, ">", LV_ALIGN_RIGHT_MID); // Create a navigation arrow for the right arrow (no click event)
+}
+
+static void create_wifi_settings_screen(void)
+{
+    lv_obj_t *screen = lv_obj_create(NULL);
+    s_wifi_settings_screen.screen = screen;
+
+    set_screen_bg(screen);
+
+    s_wifi_settings_screen.title_label = lv_label_create(screen);
+    lv_label_set_text(s_wifi_settings_screen.title_label, "Wi-Fi Settings");
+    lv_obj_set_pos(s_wifi_settings_screen.title_label, 72, 34);
+    lv_obj_set_style_text_font(s_wifi_settings_screen.title_label, &lv_font_montserrat_20, 0);
+    lv_obj_set_style_text_color(s_wifi_settings_screen.title_label, lv_color_hex(0xFFFFFF), 0);
+
+    s_wifi_settings_screen.body_label = lv_label_create(screen);
+    lv_label_set_text(s_wifi_settings_screen.body_label, "Placeholder");
+    lv_obj_set_pos(s_wifi_settings_screen.body_label, 108, 74);
+    lv_obj_set_style_text_font(s_wifi_settings_screen.body_label, &lv_font_montserrat_20, 0);
+    lv_obj_set_style_text_color(s_wifi_settings_screen.body_label, lv_color_hex(0xBDBDBD), 0);
+
+    s_wifi_settings_screen.left_arrow = create_nav_arrow_button(
+        screen,
+        "<",
+        LV_ALIGN_LEFT_MID,
+        UI_SCREEN_PLACEHOLDER_2);
+    s_wifi_settings_screen.right_arrow = create_nav_arrow(screen, ">", LV_ALIGN_RIGHT_MID);
 }
 
 static void lvgl_flush_cb(
@@ -402,6 +463,7 @@ static void lvgl_init(void)
     create_measurements_screen();
     create_placeholder_screen();
     create_placeholder_screen_2();
+    create_wifi_settings_screen();
     show_screen(UI_SCREEN_MEASUREMENTS);
 
     if (xTaskCreate(
