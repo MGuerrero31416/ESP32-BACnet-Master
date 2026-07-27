@@ -27,17 +27,53 @@ config USER_SEN54_SDA_GPIO
     int
     default 4 if USER_DISPLAY_ST7796S
     default 4 if USER_DISPLAY_ST7796S_TEST
+    default 12 if USER_DISPLAY_ST7789_TDISPLAY_S3
     default 13 if USER_DISPLAY_ST7789_HW657A
-    default 18 if USER_DISPLAY_ST7789_TDISPLAY_S3
+
     default 4
 
 config USER_SEN54_SCL_GPIO
     int
     default 5 if USER_DISPLAY_ST7796S
     default 5 if USER_DISPLAY_ST7796S_TEST
-    default 17 if USER_DISPLAY_ST7789_TDISPLAY_S3
+    default 11 if USER_DISPLAY_ST7789_TDISPLAY_S3
     default 14 if USER_DISPLAY_ST7789_HW657A
     default 5
+
+config USER_SEN54_I2C_PORT
+    int
+    default 1 if USER_DISPLAY_ST7789_TDISPLAY_S3
+    default 0
+
+# CST816 touch (LilyGO T-Display-S3 only)
+config USER_TOUCH_CST816
+    bool "Enable CST816 touch controller"
+    default y if USER_DISPLAY_ST7789_TDISPLAY_S3
+    default n
+
+config USER_TOUCH_CST816_I2C_PORT
+    int
+    default 0
+
+config USER_TOUCH_CST816_SDA_GPIO
+    int
+    default 18
+
+config USER_TOUCH_CST816_SCL_GPIO
+    int
+    default 17
+
+config USER_TOUCH_CST816_ADDR
+    hex
+    default 0x15
+
+config USER_TOUCH_CST816_RST_GPIO
+    int
+    default 21
+
+config USER_TOUCH_CST816_INT_GPIO
+    int
+    default 16
 
 config USER_SENSOR_DS18B20
     bool

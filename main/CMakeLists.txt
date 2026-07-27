@@ -39,6 +39,7 @@ elseif(CONFIG_USER_DISPLAY_ST7796S_TEST)
 elseif(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
     list(APPEND APP_SRCS
         "ui/profiles/display_st7789_tdisplay_s3.cpp"
+        "ui/hardware/touch_cst816.c"
     )
 
 elseif(CONFIG_USER_DISPLAY_ST7789_HW657A)

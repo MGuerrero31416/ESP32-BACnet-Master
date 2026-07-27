@@ -9,6 +9,7 @@
 #include "User_Settings.h"
 
 #include "board_tdisplay_s3.h"
+#include "ui/hardware/touch_cst816.h"
 
 static TFT_eSPI tft;
 static const char *TAG = "display";
@@ -142,6 +143,13 @@ extern "C" void display_init(void)
         TFT_HEIGHT,
         tft.width(),
         tft.height());
+
+#if CONFIG_USER_TOUCH_CST816
+    esp_err_t touch_ret = touch_cst816_init();
+    if (touch_ret != ESP_OK) {
+        ESP_LOGW(TAG, "CST816 init failed: %s", esp_err_to_name(touch_ret));
+    }
+#endif
 }
 
 extern "C" void display_set_link_status(
@@ -208,4 +216,9 @@ extern "C" void display_update_values(
         tft.setCursor(VALUE_X, y);
         tft.print(buffer);
     }
+
+#if CONFIG_USER_TOUCH_CST816
+    touch_cst816_point_t tp;
+    (void)touch_cst816_read(&tp);
+#endif
 }
