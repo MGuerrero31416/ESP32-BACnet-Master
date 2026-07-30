@@ -11,12 +11,13 @@
 #define TFT_HEIGHT 320
 
 /* SPI wiring */
-#define TFT_MOSI 23
-#define TFT_SCLK 18
+#define TFT_SCLK 32
+#define TFT_MOSI 33
+#define TFT_RST  25
+#define TFT_DC   26
+#define TFT_CS   27
+
 #define TFT_MISO -1
-#define TFT_CS   15
-#define TFT_DC   2
-#define TFT_RST  4
 
 /*
  * No software-controlled backlight GPIO was provided.
