@@ -12,8 +12,11 @@ menu "Project hardware"
 
 
         config USER_DISPLAY_ST7789_TDISPLAY_S3
-            bool "ST7789 170x320 - LilyGO T-Display-S3 Touch - Simple UI"
+            bool "ST7789 170x320 - LilyGO T-Display-S3 Touch"
             depends on IDF_TARGET_ESP32S3
+
+        config USER_DISPLAY_ST7789_GMT020
+            bool "ST7789 240x320 - GMT020-02-7P"
 
         config USER_DISPLAY_ST7789_HW657A
             bool "ST7789 170x320 - HW657A - Simple UI"
@@ -27,17 +30,18 @@ config USER_SEN54_SDA_GPIO
     int
     default 4 if USER_DISPLAY_ST7796S
     default 4 if USER_DISPLAY_ST7796S_TEST
-    default 12 if USER_DISPLAY_ST7789_TDISPLAY_S3
+    default 13 if USER_DISPLAY_ST7789_GMT020
     default 13 if USER_DISPLAY_ST7789_HW657A
-
+    default 18 if USER_DISPLAY_ST7789_TDISPLAY_S3
     default 4
 
 config USER_SEN54_SCL_GPIO
     int
     default 5 if USER_DISPLAY_ST7796S
     default 5 if USER_DISPLAY_ST7796S_TEST
-    default 11 if USER_DISPLAY_ST7789_TDISPLAY_S3
+    default 14 if USER_DISPLAY_ST7789_GMT020
     default 14 if USER_DISPLAY_ST7789_HW657A
+    default 17 if USER_DISPLAY_ST7789_TDISPLAY_S3
     default 5
 
 config USER_SEN54_I2C_PORT
@@ -79,7 +83,8 @@ config USER_SENSOR_DS18B20
     bool
     default y if USER_DISPLAY_ST7796S
     default y if USER_DISPLAY_ST7796S_TEST
-    default n if USER_DISPLAY_ST7789_HW657
+    default n if USER_DISPLAY_ST7789_GMT020
+    default n if USER_DISPLAY_ST7789_HW657A
     default n if USER_DISPLAY_ST7789_TDISPLAY_S3
     default n
 

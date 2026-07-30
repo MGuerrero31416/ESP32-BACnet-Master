@@ -39,12 +39,11 @@ elseif(CONFIG_USER_DISPLAY_ST7796S_TEST)
 elseif(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
     list(APPEND APP_SRCS
         "ui/profiles/display_st7789_tdisplay_s3.cpp"
-        "ui/hardware/touch_cst816.c"
     )
 
-elseif(CONFIG_USER_DISPLAY_ST7789_HW657A)
+elseif(CONFIG_USER_DISPLAY_ST7789_GMT020)
     list(APPEND APP_SRCS
-        "ui/profiles/display_st7789_hw657a.cpp"
+        "ui/profiles/display_st7789_gmt020.cpp"
     )
 
 elseif(CONFIG_USER_DISPLAY_ST7789_HW657A)
@@ -59,12 +58,6 @@ elseif(CONFIG_USER_DISPLAY_NONE)
 
 elseif(NOT CMAKE_BUILD_EARLY_EXPANSION)
     message(FATAL_ERROR "No display profile selected")
-endif()
-
-if(CONFIG_USER_SENSOR_DS18B20)
-    list(APPEND APP_SRCS
-        "app/sensors/ds18b20_sensor_service.c"
-    )
 endif()
 
 idf_component_register(

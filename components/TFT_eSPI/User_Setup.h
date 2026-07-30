@@ -11,6 +11,10 @@
 
 #include "User_Setups/Setup_Project_ST7789_TDISPLAY_S3.h"
 
+#elif defined(CONFIG_USER_DISPLAY_ST7789_GMT020)
+
+#include "User_Setups/Setup_Project_ST7789_GMT020.h"
+
 
 #elif defined(CONFIG_USER_DISPLAY_ST7789_HW657A)
 
