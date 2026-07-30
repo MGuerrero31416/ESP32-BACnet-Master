@@ -65,11 +65,8 @@ void app_main(void)
     ESP_ERROR_CHECK(
         bacnet_app_start(&task_handles));           // Start BACnet runtime tasks
 
-    //ESP_ERROR_CHECK(
-     /*
-     * Temporary: SEN54 is not connected while testing CST816 touch.
-     */
-     //   sensor_service_start(&sen54_task_handle));  // Start SEN54 and DS18B20 sensor acquisition task
+    ESP_ERROR_CHECK(
+        sensor_service_start(&sen54_task_handle));  // Start SEN54 and DS18B20 sensor acquisition task
 
     if (USER_ENABLE_ADAFRUIT_IO) {
         ESP_LOGI(
