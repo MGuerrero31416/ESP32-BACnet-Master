@@ -13,7 +13,7 @@ const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publish
 
 
 const bool USER_ENABLE_BACNET_IP = true;
-const bool USER_WIFI_USE_STATIC_IP = false;
+const bool USER_WIFI_USE_STATIC_IP = true;
 const char USER_WIFI_STATIC_IP_ADDR[] = "10.120.245.97";
 const char USER_WIFI_STATIC_IP_GATEWAY[] = "10.120.245.254";
 const char USER_WIFI_STATIC_IP_NETMASK[] = "255.255.255.0";
@@ -30,8 +30,8 @@ const char USER_BACNET_MODEL_NAME[] = "ESP32-WROOM32-SEN54-ST7789";
 const char USER_BACNET_VENDOR_NAME[] = "ESCAP FMS";
 const uint16_t USER_BACNET_VENDOR_ID = 260;
 const char USER_BACNET_LOCATION[] = "SEC-B Ground Floor FMS";
-const char USER_BACNET_FIRMWARE_REVISION[] = "1.7";
-const char USER_BACNET_APPLICATION_SOFTWARE_VERSION[] = "1.7";
+const char USER_BACNET_FIRMWARE_REVISION[] = "1.8";
+const char USER_BACNET_APPLICATION_SOFTWARE_VERSION[] = "1.8";
 const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
