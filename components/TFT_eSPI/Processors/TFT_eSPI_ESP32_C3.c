@@ -800,40 +800,40 @@ bool TFT_eSPI::initDMA(bool ctrl_cs)
   if (DMA_Enabled) return false;
 
   esp_err_t ret;
-  spi_bus_config_t buscfg = {
-    .mosi_io_num = TFT_MOSI,
-    .miso_io_num = TFT_MISO,
-    .sclk_io_num = TFT_SCLK,
-    .quadwp_io_num = -1,
-    .quadhd_io_num = -1,
-    .data4_io_num = -1,
-    .data5_io_num = -1,
-    .data6_io_num = -1,
-    .data7_io_num = -1,
-    .max_transfer_sz = TFT_WIDTH * TFT_HEIGHT * 2 + 8, // TFT screen size
-    .flags = 0,
-    .intr_flags = 0
-  };
+  spi_bus_config_t buscfg;
+  memset(&buscfg, 0, sizeof(buscfg));
+  buscfg.mosi_io_num = TFT_MOSI;
+  buscfg.miso_io_num = TFT_MISO;
+  buscfg.sclk_io_num = TFT_SCLK;
+  buscfg.quadwp_io_num = -1;
+  buscfg.quadhd_io_num = -1;
+  buscfg.data4_io_num = -1;
+  buscfg.data5_io_num = -1;
+  buscfg.data6_io_num = -1;
+  buscfg.data7_io_num = -1;
+  buscfg.max_transfer_sz = TFT_WIDTH * TFT_HEIGHT * 2 + 8; // TFT screen size
+  buscfg.flags = 0;
+  buscfg.intr_flags = 0;
 
   int8_t pin = -1;
   if (ctrl_cs) pin = TFT_CS;
 
-  spi_device_interface_config_t devcfg = {
-    .command_bits = 0,
-    .address_bits = 0,
-    .dummy_bits = 0,
-    .mode = TFT_SPI_MODE,
-    .duty_cycle_pos = 0,
-    .cs_ena_pretrans = 0,
-    .cs_ena_posttrans = 0,
-    .clock_speed_hz = SPI_FREQUENCY,
-    .input_delay_ns = 0,
-    .spics_io_num = pin,
-    .flags = SPI_DEVICE_NO_DUMMY, //0,
-    .queue_size = 1,
-    .pre_cb = 0, //dc_callback, //Callback to handle D/C line
-    .post_cb = 0
-  };
+  spi_device_interface_config_t devcfg;
+  memset(&devcfg, 0, sizeof(devcfg));
+  devcfg.command_bits = 0;
+  devcfg.address_bits = 0;
+  devcfg.dummy_bits = 0;
+  devcfg.mode = TFT_SPI_MODE;
+  devcfg.duty_cycle_pos = 0;
+  devcfg.cs_ena_pretrans = 0;
+  devcfg.cs_ena_posttrans = 0;
+  devcfg.clock_speed_hz = SPI_FREQUENCY;
+  devcfg.input_delay_ns = 0;
+  devcfg.spics_io_num = pin;
+  devcfg.flags = SPI_DEVICE_NO_DUMMY; //0,
+  devcfg.queue_size = 1;
+  devcfg.pre_cb = 0; //dc_callback, //Callback to handle D/C line
+  devcfg.post_cb = 0;
   ret = spi_bus_initialize(spi_host, &buscfg, DMA_CHANNEL);
   ESP_ERROR_CHECK(ret);
   ret = spi_bus_add_device(spi_host, &devcfg, &dmaHAL);
