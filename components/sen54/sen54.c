@@ -1,5 +1,5 @@
 #include "sen54.h"
-#include "driver/i2c.h"
+#include "driver/i2c_master.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -9,6 +9,8 @@
 
 static const char *TAG = "SEN54";
 static bool i2c_ready = false;
+static i2c_master_bus_handle_t sen54_bus = NULL;
+static i2c_master_dev_handle_t sen54_dev = NULL;
 
 // SEN54 I2C commands (big-endian 16-bit)
 // 0x0021: Start Measurement (enables fan and continuous measurements)
@@ -92,9 +94,13 @@ esp_err_t sen54_i2c_bridge_write(
         return ESP_ERR_INVALID_ARG;
     }
 
-    return i2c_master_write_to_device(
-        SEN54_I2C_PORT,
-        address,
+    if (sen54_dev == NULL) {
+        ESP_LOGE(TAG, "I2C device not initialized");
+        return ESP_FAIL;
+    }
+
+    return i2c_master_transmit(
+        sen54_dev,
         data,
         length,
         pdMS_TO_TICKS(100));
@@ -109,9 +115,13 @@ esp_err_t sen54_i2c_bridge_read(
         return ESP_ERR_INVALID_ARG;
     }
 
-    return i2c_master_read_from_device(
-        SEN54_I2C_PORT,
-        address,
+    if (sen54_dev == NULL) {
+        ESP_LOGE(TAG, "I2C device not initialized");
+        return ESP_FAIL;
+    }
+
+    return i2c_master_receive(
+        sen54_dev,
         data,
         length,
         pdMS_TO_TICKS(100));
@@ -160,30 +170,40 @@ void sen54_init(void)
         return;
     }
 
-    i2c_config_t cfg = {
-        .mode             = I2C_MODE_MASTER,
-        .sda_io_num       = SEN54_I2C_SDA_PIN,
-        .scl_io_num       = SEN54_I2C_SCL_PIN,
-        .sda_pullup_en    = GPIO_PULLUP_ENABLE,
-        .scl_pullup_en    = GPIO_PULLUP_ENABLE,
-        .master.clk_speed = SEN54_I2C_FREQ_HZ,
-    };
-    esp_err_t err = i2c_param_config(SEN54_I2C_PORT, &cfg);
-    if (err != ESP_OK) {
-        ESP_LOGE(TAG, "i2c_param_config failed: %s", esp_err_to_name(err));
-        return;
-    }
+    esp_err_t err = ESP_OK;
 
     if (!i2c_ready) {
-        err = i2c_driver_install(SEN54_I2C_PORT, I2C_MODE_MASTER, 0, 0, 0);
-        if (err == ESP_ERR_INVALID_STATE) {
-            /* Driver already installed on this port by another component */
-            err = ESP_OK;
-        }
+        i2c_master_bus_config_t bus_cfg;
+        memset(&bus_cfg, 0, sizeof(bus_cfg));
+        bus_cfg.i2c_port = (i2c_port_num_t)SEN54_I2C_PORT;
+        bus_cfg.sda_io_num = (gpio_num_t)SEN54_I2C_SDA_PIN;
+        bus_cfg.scl_io_num = (gpio_num_t)SEN54_I2C_SCL_PIN;
+        bus_cfg.clk_source = I2C_CLK_SRC_DEFAULT;
+        bus_cfg.flags.enable_internal_pullup = 1;
+
+        err = i2c_new_master_bus(&bus_cfg, &sen54_bus);
         if (err != ESP_OK) {
-            ESP_LOGE(TAG, "i2c_driver_install failed: %s", esp_err_to_name(err));
+            ESP_LOGE(TAG, "i2c_new_master_bus failed: %s", esp_err_to_name(err));
             return;
         }
+
+        /* Add the SEN54 device on the bus */
+        i2c_device_config_t dev_cfg;
+        memset(&dev_cfg, 0, sizeof(dev_cfg));
+        dev_cfg.dev_addr_length = I2C_ADDR_BIT_LEN_7;
+        dev_cfg.device_address = SEN54_I2C_ADDR;
+        dev_cfg.scl_speed_hz = SEN54_I2C_FREQ_HZ;
+        dev_cfg.flags.disable_ack_check = 0;
+
+        err = i2c_master_bus_add_device(sen54_bus, &dev_cfg, &sen54_dev);
+        if (err != ESP_OK) {
+            ESP_LOGE(TAG, "i2c_master_bus_add_device failed: %s", esp_err_to_name(err));
+            /* cleanup bus on failure */
+            i2c_del_master_bus(sen54_bus);
+            sen54_bus = NULL;
+            return;
+        }
+
         i2c_ready = true;
     }
 

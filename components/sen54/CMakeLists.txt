@@ -7,5 +7,5 @@ idf_component_register(
         "sensirion/sensirion_i2c_hal.c"
     INCLUDE_DIRS "."
     PRIV_INCLUDE_DIRS "sensirion"
-    REQUIRES driver freertos
+    REQUIRES esp_driver_i2c freertos
 )
