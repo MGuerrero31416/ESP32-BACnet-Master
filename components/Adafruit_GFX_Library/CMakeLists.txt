@@ -2,7 +2,7 @@
 # https://github.com/adafruit/Adafruit-GFX-Library
 # BSD License
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
 idf_component_register(SRCS "Adafruit_GFX.cpp" "Adafruit_GrayOLED.cpp" "Adafruit_SPITFT.cpp" "glcdfont.c"
                        INCLUDE_DIRS "."
