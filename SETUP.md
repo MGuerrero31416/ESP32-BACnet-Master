@@ -149,15 +149,17 @@ Use this file for the ESP32-WROOM-32 HW657A target:
 
 ```ini
 # ESP32-WROOM-32 target defaults
-# 4 MB flash, no PSRAM, single application partition
+# 4 MB flash, no PSRAM, 2 MB single application partition
 
 CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
 CONFIG_ESPTOOLPY_FLASHSIZE="4MB"
 
 # CONFIG_SPIRAM is not set
 
-CONFIG_PARTITION_TABLE_SINGLE_APP=y
-CONFIG_PARTITION_TABLE_FILENAME="partitions_singleapp.csv"
+# CONFIG_PARTITION_TABLE_SINGLE_APP is not set
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions_2mb_app.csv"
+CONFIG_PARTITION_TABLE_FILENAME="partitions_2mb_app.csv"
 ```
 
 ### `sdkconfig.defaults.esp32s3`
@@ -334,15 +336,18 @@ Available profiles:
 ```text
 ST7796S 480x320 3.5in - colorful UI
 ST7796S 480x320 - test UI
+ST7789 170x320 - LilyGO T-Display-S3 Touch
+LVGL T-Display S3 - LilyGO LVGL UI
+ST7789 240x320 - GMT020-02-7P
 ST7789 170x320 - HW657A - Simple UI
 No display
 ```
 
-The display-profile options are visible independently of whether the selected target is `esp32` or `esp32s3`.
+The T-Display-S3 profiles are available only when the selected target is
+`esp32s3`. The other profiles are target-independent in Kconfig, but their
+GPIO mappings must still match the physical processor board.
 
-However, the GPIO mapping selected by a display profile must be valid for the physical processor board.
-
-See [`Profiles.md`](Profiles.md) for details.
+See [`docs/profiles/`](docs/profiles/) for details.
 
 ---
 
@@ -354,6 +359,9 @@ The current `main/Kconfig.projbuild` also derives the SEN54 pins and DS18B20 bui
 | ------------------- | --------: | --------: | -------- |
 | ST7796S colorful UI |     GPIO4 |     GPIO5 | Enabled  |
 | ST7796S test UI     |     GPIO4 |     GPIO5 | Enabled  |
+| T-Display-S3 Touch  |    GPIO18 |    GPIO17 | Disabled |
+| T-Display-S3 LVGL   |    GPIO18 |    GPIO17 | Disabled |
+| GMT020-02-7P        |    GPIO13 |    GPIO14 | Disabled |
 | ST7789 HW657A       |    GPIO13 |    GPIO14 | Disabled |
 | No display          |     GPIO4 |     GPIO5 | Disabled |
 
@@ -379,10 +387,13 @@ Current mapping:
 
 | Kconfig symbol                      | UI source                                      |
 | ----------------------------------- | ---------------------------------------------- |
-| `CONFIG_USER_DISPLAY_ST7796S`       | `main/ui/profiles/display_st7796s_current.cpp` |
-| `CONFIG_USER_DISPLAY_ST7796S_TEST`  | `main/ui/profiles/display_st7796s_test.cpp`    |
-| `CONFIG_USER_DISPLAY_ST7789_HW657A` | `main/ui/profiles/display_st7789_hw657a.cpp`   |
-| `CONFIG_USER_DISPLAY_NONE`          | `main/ui/profiles/display_none.c`              |
+| `CONFIG_USER_DISPLAY_ST7796S`          | `main/ui/profiles/display_st7796s.cpp`          |
+| `CONFIG_USER_DISPLAY_ST7796S_TEST`     | `main/ui/profiles/display_st7796s_test.cpp`     |
+| `CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3` | `main/ui/profiles/display_st7789_tdisplay_s3.cpp` |
+| `CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3` | `main/ui/profiles/display_lvgl_tdisplay_s3.cpp` |
+| `CONFIG_USER_DISPLAY_ST7789_GMT020`    | `main/ui/profiles/display_st7789_gmt020.cpp`    |
+| `CONFIG_USER_DISPLAY_ST7789_HW657A`    | `main/ui/profiles/display_st7789_hw657a.cpp`    |
+| `CONFIG_USER_DISPLAY_NONE`             | `main/ui/profiles/display_none.c`               |
 
 TFT_eSPI hardware selection is performed in:
 
@@ -395,6 +406,8 @@ The panel-specific configurations are:
 ```text
 components/TFT_eSPI/User_Setups/Setup_Project_ST7796S.h
 components/TFT_eSPI/User_Setups/Setup_Project_ST7789_HW657A.h
+components/TFT_eSPI/User_Setups/Setup_Project_ST7789_TDISPLAY_S3.h
+components/TFT_eSPI/User_Setups/Setup_Project_ST7789_GMT020.h
 ```
 
 ---

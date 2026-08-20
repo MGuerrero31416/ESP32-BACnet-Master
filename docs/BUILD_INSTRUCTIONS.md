@@ -1,62 +1,68 @@
 # ESP32 BACnet Device - Build Instructions
 
+This project uses ESP-IDF 6.0.2 and Arduino-ESP32 3.3.11. The complete
+environment and configuration procedure is documented in
+[`SETUP.md`](../SETUP.md).
+
 ## Prerequisites
-- ESP-IDF v5.5.1 installed
-- WiFi credentials configured in main.c
+
+- ESP-IDF 6.0.2 installed at `C:\esp\v6.0.2\esp-idf`, or an initialized
+  ESP-IDF 6.0.2 terminal
+- Visual Studio Code with the ESP-IDF extension
+- Wi-Fi credentials in `main/User_Private_Settings.h`
+
+Create the private settings file from
+`main/User_Private_Settings.example.h`; do not commit the private file.
 
 ## Build Steps
 
-1. **Configure WiFi credentials** in `main/main.c`:
-   ```c
-   #define WIFI_SSID "Your_WiFi_Name"
-   #define WIFI_PASS "Your_Password"
-   ```
+From the repository root, use the supplied wrapper when ESP-IDF is installed
+at the required path:
 
-2. **Open ESP-IDF PowerShell** (or source the export script)
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass `
+  -File .\tools\build_idf60.ps1 build
+```
 
-3. **Navigate to project directory**:
-   ```powershell
-   cd C:\esp\BACnet-ESP32-S3
-   ```
+From an initialized ESP-IDF 6.0.2 terminal, the equivalent command is:
 
-4. **Build the project**:
-   ```powershell
-   idf.py build
-   ```
+```powershell
+idf.py build
+```
 
-5. **Flash to ESP32** (replace COM3 with your port):
-   ```powershell
-   idf.py -p COM3 flash
-   ```
+Select the ESP-IDF target and display profile before building. After changing
+the target, display profile, TFT setup, or GPIO mapping, run:
 
-6. **Monitor output**:
-   ```powershell
-   idf.py -p COM3 monitor
-   ```
+```powershell
+idf.py fullclean
+idf.py build
+```
 
-## Expected Output
+## Flash and Monitor
 
-The device will:
-- Connect to WiFi
-- Initialize 6 Analog Value objects
-- Initialize 6 Binary Value objects
-- Send I-Am broadcasts every 30 seconds on UDP port 47808
-- Display object status every 10 seconds
+Replace `COMx` with the device serial port:
 
-## BACnet Configuration
+```powershell
+idf.py -p COMx flash monitor
+```
 
-- **Device Instance**: 1234
-- **Device Name**: ESP32-BACnet
-- **Port**: 47808 (0xBAC0)
-- **Objects**: 
-  - 6 Analog Values (instances 0-5)
-  - 6 Binary Values (instances 0-5)
+Do not flash a device until the selected target, display profile, and wiring
+have been checked.
 
-## Testing
+## BACnet Object Model
 
-Use BACnet tools like:
-- YABE (Yet Another BACnet Explorer)
-- BACnet Scanner
-- Visual Test Shell
+The default configuration exposes 36 objects:
 
-The device should appear as "ESP32-BACnet" with device instance 1234.
+- 16 Analog Values
+- 4 Binary Values
+- 8 Analog Inputs
+- 4 Binary Inputs
+- 4 Binary Outputs
+
+BACnet device identity, object instances, and metadata are configured in
+`main/User_Settings.c` and `main/User_Settings.h`. The active device instance
+and name are configuration values and should not be assumed to be fixed.
+
+For BACnet verification, use tools such as YABE, BACnet Scanner, or Visual
+Test Shell. See [`OBJECTS_CONFIGURATION.md`](../OBJECTS_CONFIGURATION.md) for
+the object roles and persistence behavior.

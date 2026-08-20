@@ -6,6 +6,7 @@
 #include "esp_timer.h"
 #include "esp_rom_sys.h"
 #include "freertos/FreeRTOS.h"
+#include "User_Settings.h"
 
 #define MSTP_UART_PORT UART_NUM_2
 #define MSTP_UART_TX_PIN GPIO_NUM_17
@@ -33,6 +34,9 @@ static void mstp_rs485_set_tx_mode(bool enabled)
 
 void MSTP_RS485_Init(void)
 {
+    if (!USER_ENABLE_BACNET_MSTP) {
+        return;
+    }
     if (mstp_uart_initialized) {
         return;
     }
@@ -100,6 +104,9 @@ void MSTP_RS485_Send(const uint8_t *payload, uint16_t payload_len)
     if (!payload || payload_len == 0) {
         return;
     }
+    if (!USER_ENABLE_BACNET_MSTP) {
+        return;
+    }
     if (!mstp_uart_initialized) {
         MSTP_RS485_Init();
     }
@@ -136,6 +143,9 @@ void MSTP_RS485_Send(const uint8_t *payload, uint16_t payload_len)
 
 bool MSTP_RS485_Read(uint8_t *buf)
 {
+    if (!USER_ENABLE_BACNET_MSTP) {
+        return false;
+    }
     if (!mstp_uart_initialized) {
         MSTP_RS485_Init();
     }

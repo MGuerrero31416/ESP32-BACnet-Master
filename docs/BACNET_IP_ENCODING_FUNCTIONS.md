@@ -1,14 +1,16 @@
 # BACnet/IP Header Files and Encoding Functions
 
 ## Search Summary
-Comprehensive search of the BACnet stack component at `c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\` for BACnet/IP BVLC (BACnet Virtual Link Control) related header files and encoding functions.
+Search of the repository BACnet stack component at
+`components/bacnet-stack/src/bacnet/datalink/` for BACnet/IP BVLC
+(BACnet Virtual Link Control) related header files and encoding functions.
 
 ---
 
 ## Header Files Located
 
 ### 1. **bvlc.h** - BACnet/IP (IPv4) BVLL Control
-**Path:** [c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\bvlc.h](c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\bvlc.h)
+**Path:** [`components/bacnet-stack/src/bacnet/datalink/bvlc.h`](../components/bacnet-stack/src/bacnet/datalink/bvlc.h)
 
 **Description:** BACnet/IP virtual link control module encode and decode for IPv4
 
@@ -20,7 +22,7 @@ Comprehensive search of the BACnet stack component at `c:\esp\BACnet-ESP32-S3\co
 ---
 
 ### 2. **bvlc6.h** - BACnet/IPv6 BVLL Control
-**Path:** [c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\bvlc6.h](c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\bvlc6.h)
+**Path:** [`components/bacnet-stack/src/bacnet/datalink/bvlc6.h`](../components/bacnet-stack/src/bacnet/datalink/bvlc6.h)
 
 **Description:** Implementation of BACnet Virtual Link Layer using IPv6
 
@@ -33,7 +35,7 @@ Comprehensive search of the BACnet stack component at `c:\esp\BACnet-ESP32-S3\co
 ---
 
 ### 3. **bip.h** - BACnet/IP DataLink API
-**Path:** [c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\bip.h](c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\bip.h)
+**Path:** [`components/bacnet-stack/src/bacnet/datalink/bip.h`](../components/bacnet-stack/src/bacnet/datalink/bip.h)
 
 **Description:** BACnet/IP datalink API for IPv4
 
@@ -44,7 +46,7 @@ Comprehensive search of the BACnet stack component at `c:\esp\BACnet-ESP32-S3\co
 ---
 
 ### 4. **bip6.h** - BACnet/IPv6 DataLink API
-**Path:** [c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\bip6.h](c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\bip6.h)
+**Path:** [`components/bacnet-stack/src/bacnet/datalink/bip6.h`](../components/bacnet-stack/src/bacnet/datalink/bip6.h)
 
 **Description:** BACnet/IPv6 datalink API
 
@@ -311,7 +313,7 @@ typedef struct BACnet_IP_Foreign_Device_Table_Entry {
 
 ## Additional Header Files in Datalink Component
 
-Located in `c:\esp\BACnet-ESP32-S3\components\bacnet-stack\src\bacnet\datalink\`:
+Located in `components/bacnet-stack/src/bacnet/datalink/`:
 
 - arcnet.h - ARCnet protocol support
 - automac.c/h - Automatic MAC address handling

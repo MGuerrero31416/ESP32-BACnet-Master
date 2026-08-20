@@ -5,3 +5,4 @@ dependencies:
   espressif/arduino-esp32: '3.3.11'
   espressif/mqtt: '^1.0.0'
   lvgl/lvgl: '8.3.11'
+  espressif/esp_lvgl_port: '>=1.0.0'

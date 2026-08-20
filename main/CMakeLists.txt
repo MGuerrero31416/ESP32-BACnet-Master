@@ -23,10 +23,14 @@ set(APP_SRCS
     "platform/mstp_rs485.c"
     "platform/wifi_helper.c"
 
-    "ui/hardware/touch_cst816.c"
-
     "User_Settings.c"
 )
+
+if(CONFIG_USER_TOUCH_CST816)
+    list(APPEND APP_SRCS
+        "ui/hardware/touch_cst816.c"
+    )
+endif()
 
 if(CONFIG_USER_SENSOR_DS18B20)
     list(APPEND APP_SRCS
@@ -49,6 +53,11 @@ elseif(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
         "ui/profiles/display_st7789_tdisplay_s3.cpp"
     )
 
+elseif(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
+    list(APPEND APP_SRCS
+        "ui/profiles/display_lvgl_tdisplay_s3.cpp"
+    )
+
 elseif(CONFIG_USER_DISPLAY_ST7789_GMT020)
     list(APPEND APP_SRCS
         "ui/profiles/display_st7789_gmt020.cpp"
@@ -68,6 +77,21 @@ elseif(NOT CMAKE_BUILD_EARLY_EXPANSION)
     message(FATAL_ERROR "No display profile selected")
 endif()
 
+set(REQUIRED_COMPONENTS
+    bacnet-stack
+    TFT_eSPI
+    espressif__arduino-esp32
+    sen54
+    ds18b20
+)
+
+if(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
+    list(APPEND REQUIRED_COMPONENTS
+        lvgl
+        esp_lvgl_port
+    )
+endif()
+
 idf_component_register(
     SRCS
         ${APP_SRCS}
@@ -83,11 +107,7 @@ idf_component_register(
         "app/sensors"
 
     REQUIRES
-        bacnet-stack
-        TFT_eSPI
-        espressif__arduino-esp32
-        sen54
-        ds18b20
+        ${REQUIRED_COMPONENTS}
 
     PRIV_REQUIRES
         spi_flash
@@ -123,6 +143,7 @@ set_source_files_properties(
     "ui/profiles/display_st7796s.cpp"
     "ui/profiles/display_st7796s_test.cpp"
     "ui/profiles/display_st7789_tdisplay_s3.cpp"
+    "ui/profiles/display_lvgl_tdisplay_s3.cpp"
     PROPERTIES
         COMPILE_OPTIONS "-Wno-error=cpp;-Wno-error=deprecated-enum-enum-conversion"
 )
