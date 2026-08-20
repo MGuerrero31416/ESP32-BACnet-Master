@@ -25,8 +25,8 @@ See also:
 
 Use:
 
-* ESP-IDF `5.5.4`
-* Arduino-ESP32 `3.3.10`
+* ESP-IDF `6.0.2`
+* Arduino-ESP32 `3.3.11`
 * Visual Studio Code
 * ESP-IDF VS Code extension
 * Git
@@ -36,16 +36,16 @@ Arduino-ESP32 and the other managed dependencies are resolved by the ESP-IDF Com
 The repository also provides:
 
 ```text
-tools/build_idf55.ps1
+tools/build_idf60.ps1
 ```
 
 This wrapper requires ESP-IDF to be installed at:
 
 ```text
-C:\esp\v5.5.4\esp-idf
+C:\esp\v6.0.2\esp-idf
 ```
 
-When ESP-IDF is installed elsewhere, use the ESP-IDF VS Code extension or an initialized ESP-IDF 5.5.4 terminal instead.
+When ESP-IDF is installed elsewhere, use the ESP-IDF VS Code extension or an initialized ESP-IDF 6.0.2 terminal instead.
 
 ---
 
@@ -595,28 +595,28 @@ ESP-IDF: Build your project
 
 ### Repository PowerShell wrapper
 
-When ESP-IDF 5.5.4 is installed at:
+When ESP-IDF 6.0.2 is installed at:
 
 ```text
-C:\esp\v5.5.4\esp-idf
+C:\esp\v6.0.2\esp-idf
 ```
 
 run:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass `
-  -File .\tools\build_idf55.ps1 build
+  -File .\tools\build_idf60.ps1 build
 ```
 
 The wrapper verifies:
 
 * The expected ESP-IDF path exists.
 * The activated `IDF_PATH` is correct.
-* The active ESP-IDF version is 5.5.4.
+* The active ESP-IDF version is 6.0.2.
 
 ### Initialized ESP-IDF shell
 
-From an initialized ESP-IDF 5.5.4 terminal:
+From an initialized ESP-IDF 6.0.2 terminal:
 
 ```powershell
 idf.py build
@@ -643,7 +643,7 @@ Replace `COMx` with the actual serial port:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass `
-  -File .\tools\build_idf55.ps1 `
+  -File .\tools\build_idf60.ps1 `
   -p COMx flash monitor
 ```
 
@@ -794,10 +794,10 @@ Also remember that an existing generated `sdkconfig` takes precedence over the d
 The wrapper requires:
 
 ```text
-C:\esp\v5.5.4\esp-idf
+C:\esp\v6.0.2\esp-idf
 ```
 
-Use the VS Code ESP-IDF extension or an initialized ESP-IDF 5.5.4 shell when the installation uses another path.
+Use the VS Code ESP-IDF extension or an initialized ESP-IDF 6.0.2 shell when the installation uses another path.
 
 ### `User_Private_Settings.h` is missing
 

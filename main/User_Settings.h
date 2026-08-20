@@ -35,7 +35,7 @@ extern const char USER_BACNET_VENDOR_NAME[];
 extern const uint16_t USER_BACNET_VENDOR_ID;
 extern const char USER_BACNET_LOCATION[];
 extern const char USER_BACNET_FIRMWARE_REVISION[];
-extern const char USER_BACNET_APPLICATION_SOFTWARE_VERSION[];
+extern const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION;
 extern const char USER_BACNET_SERIAL_NUMBER[];
 extern const uint32_t USER_BACNET_DEVICE_INSTANCE;
 extern const int USER_OVERRIDE_NVS_ON_FLASH;

@@ -23,8 +23,16 @@ set(APP_SRCS
     "platform/mstp_rs485.c"
     "platform/wifi_helper.c"
 
+    "ui/hardware/touch_cst816.c"
+
     "User_Settings.c"
 )
+
+if(CONFIG_USER_SENSOR_DS18B20)
+    list(APPEND APP_SRCS
+        "app/sensors/ds18b20_sensor_service.c"
+    )
+endif()
 
 if(CONFIG_USER_DISPLAY_ST7796S)
     list(APPEND APP_SRCS
@@ -88,6 +96,8 @@ idf_component_register(
         esp_wifi
         esp_netif
         driver
+        esp_driver_gpio
+        esp_driver_uart
         esp_timer
         mqtt
         mbedtls
@@ -107,4 +117,12 @@ target_link_libraries(
     INTERFACE
         "-Wl,--undefined=__wrap_esp_log_write"
         "-Wl,--undefined=__wrap_esp_log_writev"
+)
+
+set_source_files_properties(
+    "ui/profiles/display_st7796s.cpp"
+    "ui/profiles/display_st7796s_test.cpp"
+    "ui/profiles/display_st7789_tdisplay_s3.cpp"
+    PROPERTIES
+        COMPILE_OPTIONS "-Wno-error=cpp;-Wno-error=deprecated-enum-enum-conversion"
 )

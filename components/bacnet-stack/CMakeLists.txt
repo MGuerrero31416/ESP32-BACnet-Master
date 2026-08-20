@@ -60,7 +60,7 @@ idf_component_register(
     INCLUDE_DIRS 
         "src"
     REQUIRES
-        freertos lwip esp_wifi esp_netif esp_timer
+        freertos lwip esp_wifi esp_netif esp_timer esp_driver_gpio
 )
 
 # Define BACnet/IP as the datalink layer

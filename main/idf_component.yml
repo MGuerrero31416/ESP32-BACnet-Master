@@ -1,6 +1,7 @@
 ## IDF Component Manager Manifest File
 dependencies:
   idf:
-    version: '>=5.5.0,<5.6.0'
-  espressif/arduino-esp32: ^3.3.5
-  lvgl/lvgl: 8.3.11
+    version: '>=6.0.2,<6.1.0'
+  espressif/arduino-esp32: '3.3.11'
+  espressif/mqtt: '^1.0.0'
+  lvgl/lvgl: '8.3.11'

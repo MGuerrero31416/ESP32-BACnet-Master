@@ -36,13 +36,15 @@
 
 /* Fonts */
 #define LOAD_GLCD
-#define LOAD_FONT2
-#define LOAD_FONT4
-#define LOAD_FONT6
-#define LOAD_FONT7
-#define LOAD_FONT8
-#define LOAD_GFXFF
+/* #define LOAD_FONT2 */
+/* #define LOAD_FONT4 */
+/* Keep larger and free fonts disabled to reduce flash usage on 4 MB ESP32. */
+/* #define LOAD_FONT6 */
+/* #define LOAD_FONT7 */
+/* #define LOAD_FONT8 */
+/* #define LOAD_GFXFF */
+/* Smooth-font rendering is used by this profile UI. */
 #define SMOOTH_FONT
 
 /* No touch controller */
-//#define TOUCH_CS -1
+#define TOUCH_CS -1

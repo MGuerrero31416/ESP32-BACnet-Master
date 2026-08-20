@@ -2,6 +2,18 @@
         // TFT_eSPI driver functions for ESP32 processors //
         ////////////////////////////////////////////////////
 
+      #if defined(CONFIG_IDF_TARGET_ESP32)
+      #ifndef HSPI_HOST
+      #define HSPI_HOST SPI2_HOST
+      #endif
+      #ifndef VSPI_HOST
+      #define VSPI_HOST SPI3_HOST
+      #endif
+      #ifndef SPI_HOST
+      #define SPI_HOST SPI2_HOST
+      #endif
+      #endif
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // Global variables
 ////////////////////////////////////////////////////////////////////////////////////////

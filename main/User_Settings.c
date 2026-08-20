@@ -30,8 +30,8 @@ const char USER_BACNET_MODEL_NAME[] = "ESP32-WROOM32-SEN54-ST7789";
 const char USER_BACNET_VENDOR_NAME[] = "ESCAP FMS";
 const uint16_t USER_BACNET_VENDOR_ID = 260;
 const char USER_BACNET_LOCATION[] = "SEC-B Ground Floor FMS";
-const char USER_BACNET_FIRMWARE_REVISION[] = "1.8";
-const char USER_BACNET_APPLICATION_SOFTWARE_VERSION[] = "1.8";
+const char USER_BACNET_FIRMWARE_REVISION[] = "2.2 2026_08_20a";
+const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION = USER_BACNET_FIRMWARE_REVISION;
 const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
@@ -326,6 +326,23 @@ void User_Settings_Print(void)
     ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
     ESP_LOGI(TAG_USER_SETTINGS, "===================== User Settings ====================");
 
+        /* Display hardware profile selected in menuconfig */
+    #if defined(CONFIG_USER_DISPLAY_ST7796S)
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7796S 480x320 3.5in - colorful UI");
+    #elif defined(CONFIG_USER_DISPLAY_ST7796S_TEST)
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7796S 480x320 - test UI");
+    #elif defined(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7789 170x320 - LilyGO T-Display-S3 Touch");
+    #elif defined(CONFIG_USER_DISPLAY_ST7789_GMT020)
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7789 240x320 - GMT020-02-7P");
+    #elif defined(CONFIG_USER_DISPLAY_ST7789_HW657A)
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7789 170x320 - HW657A - Simple UI");
+    #elif defined(CONFIG_USER_DISPLAY_NONE)
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: None");
+    #else
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: (unknown)");
+    #endif
+    ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
     ESP_LOGI(TAG_USER_SETTINGS, "[Wi-Fi / BACnet-IP]");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_ENABLE_BACNET_IP: %s", USER_ENABLE_BACNET_IP ? "true" : "false");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_WIFI_SSID: %s", USER_WIFI_SSID);
@@ -335,13 +352,13 @@ void User_Settings_Print(void)
     ESP_LOGI(TAG_USER_SETTINGS, "USER_WIFI_STATIC_IP_GATEWAY: %s", USER_WIFI_STATIC_IP_GATEWAY);
     ESP_LOGI(TAG_USER_SETTINGS, "USER_WIFI_STATIC_IP_NETMASK: %s", USER_WIFI_STATIC_IP_NETMASK);
     ESP_LOGI(TAG_USER_SETTINGS, "USER_WIFI_STATIC_DNS: %s", USER_WIFI_STATIC_DNS);
-
+    ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
     ESP_LOGI(TAG_USER_SETTINGS, "[Adafruit IO]");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_ENABLE_ADAFRUIT_IO: %s", USER_ENABLE_ADAFRUIT_IO ? "true" : "false");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_AIO_USERNAME: %s", USER_AIO_USERNAME);
     ESP_LOGI(TAG_USER_SETTINGS, "USER_AIO_KEY: ****");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_AIO_FEED_KEY: %s", USER_AIO_FEED_KEY);
-
+    ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
     ESP_LOGI(TAG_USER_SETTINGS, "[BACnet Device]");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_DEVICE_NAME: %s", USER_BACNET_DEVICE_NAME);
     ESP_LOGI(TAG_USER_SETTINGS, "USER_BACNET_DEVICE_DESCRIPTION: %s", USER_BACNET_DEVICE_DESCRIPTION);

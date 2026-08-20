@@ -5,11 +5,16 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$ExpectedIdfPath = "C:\esp\v5.5.4\esp-idf"
+$ExpectedIdfPath = "C:\esp\v6.0.2\esp-idf"
 $ExportScript = Join-Path $ExpectedIdfPath "export.ps1"
+$IdfPyScript = Join-Path $ExpectedIdfPath "tools\idf.py"
 
 if (-not (Test-Path $ExportScript)) {
     throw "Required ESP-IDF installation not found: $ExpectedIdfPath"
+}
+
+if (-not (Test-Path $IdfPyScript)) {
+    throw "Required ESP-IDF tool not found: $IdfPyScript"
 }
 
 Write-Host "Activating required ESP-IDF: $ExpectedIdfPath"
@@ -18,7 +23,7 @@ Write-Host "Activating required ESP-IDF: $ExpectedIdfPath"
 & $ExportScript
 
 if ($LASTEXITCODE -ne 0) {
-    throw "ESP-IDF 5.5.4 environment activation failed."
+    throw "ESP-IDF 6.0.2 environment activation failed."
 }
 
 $ResolvedExpectedPath = (Resolve-Path $ExpectedIdfPath).Path.TrimEnd("\")
@@ -35,17 +40,17 @@ Build aborted before CMake or Ninja could run.
 "@
 }
 
-$IdfVersion = (& idf.py --version 2>&1 | Out-String).Trim()
+$IdfVersion = (& python $IdfPyScript --version 2>&1 | Out-String).Trim()
 
 if ($LASTEXITCODE -ne 0) {
     throw "Unable to determine the active ESP-IDF version."
 }
 
-if ($IdfVersion -notmatch "5\.5\.4") {
+if ($IdfVersion -notmatch "6\.0\.2") {
     throw @"
 Incorrect ESP-IDF version.
 
-Required: ESP-IDF 5.5.4
+Required: ESP-IDF 6.0.2
 Detected: $IdfVersion
 
 Build aborted.
@@ -63,5 +68,5 @@ Write-Host "  Version:  $IdfVersion"
 Write-Host "  Command:  idf.py $($IdfArguments -join ' ')"
 Write-Host ""
 
-& idf.py @IdfArguments
+& python $IdfPyScript @IdfArguments
 exit $LASTEXITCODE

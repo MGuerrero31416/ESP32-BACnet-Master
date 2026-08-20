@@ -104,7 +104,7 @@ Then enter the Wi-Fi and, when required, Adafruit IO credentials. The private fi
 
 Tested environment:
 
-* ESP-IDF `5.5.4`
+* ESP-IDF `6.0.2`
 * Arduino-ESP32 `3.3.11`
 * Visual Studio Code with the ESP-IDF extension
 * Git
@@ -113,17 +113,17 @@ The supplied PowerShell wrapper verifies the ESP-IDF installation before running
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass `
-    -File .\tools\build_idf55.ps1 build
+    -File .\tools\build_idf60.ps1 build
 ```
 
 After changing a display profile or TFT_eSPI setup:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass `
-    -File .\tools\build_idf55.ps1 fullclean
+    -File .\tools\build_idf60.ps1 fullclean
 
 powershell -NoProfile -ExecutionPolicy Bypass `
-    -File .\tools\build_idf55.ps1 build
+    -File .\tools\build_idf60.ps1 build
 ```
 
 Flash and monitor using the ESP-IDF extension or the corresponding wrapper arguments.
