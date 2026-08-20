@@ -105,9 +105,11 @@ const uint16_t USER_AV_UNITS[USER_AV_COUNT] = {
     UNITS_NO_UNITS,
     UNITS_NO_UNITS,
     UNITS_NO_UNITS,
+    UNITS_NO_UNITS,
     UNITS_NO_UNITS
 };
 const float USER_AV_INITIAL_VALUES[USER_AV_COUNT] = {
+    0.0f,
     0.0f,
     0.0f,
     0.0f,
@@ -130,6 +132,7 @@ const float USER_AV_COV_INCREMENTS[USER_AV_COUNT] = {
     0.0001f,
     1.0f,
     0.1f,
+    1.0f,
     1.0f,
     1.0f,
     1.0f,
