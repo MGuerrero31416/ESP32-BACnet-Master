@@ -30,7 +30,7 @@ const char USER_BACNET_MODEL_NAME[] = "ESP32-WROOM32-SEN54-ST7789";
 const char USER_BACNET_VENDOR_NAME[] = "ESCAP FMS";
 const uint16_t USER_BACNET_VENDOR_ID = 260;
 const char USER_BACNET_LOCATION[] = "SEC-B Ground Floor FMS";
-const char USER_BACNET_FIRMWARE_REVISION[] = "2.5a 2026_08_20";
+const char USER_BACNET_FIRMWARE_REVISION[] = "2.6a 2026_08_21";
 // V2.5a added LVGL Lilygo T-Display-S3 Touch.
 const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION = USER_BACNET_FIRMWARE_REVISION;
 const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
@@ -327,8 +327,11 @@ void User_Settings_InitDeviceIdentity(void)
 void User_Settings_Print(void)
 {
 #if USER_SETTINGS_PRINT_ENABLE
-    ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
-    ESP_LOGI(TAG_USER_SETTINGS, "===================== User Settings ====================");
+    ESP_LOGI(TAG_USER_SETTINGS, " ╔==============================================================╗");
+    ESP_LOGI(TAG_USER_SETTINGS, " ║                          User Settings                       ║");
+    ESP_LOGI(TAG_USER_SETTINGS, " ╠==============================================================╝");
+    ESP_LOGI(TAG_USER_SETTINGS, " ║    FIRMWARE_REVISION: %s", USER_BACNET_FIRMWARE_REVISION);
+    ESP_LOGI(TAG_USER_SETTINGS, "╚===============================================================");
 
         /* Display hardware profile selected in menuconfig */
     #if defined(CONFIG_USER_DISPLAY_ST7796S)
@@ -346,9 +349,9 @@ void User_Settings_Print(void)
     #elif defined(CONFIG_USER_DISPLAY_NONE)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: None");
     #else
-        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: (unknown)");
+        ESP_LOGI(TAG_USER_SETTINGS, "║Display Hardware Profile: (unknown)");
     #endif
-    ESP_LOGI(TAG_USER_SETTINGS, "========================================================");
+    ESP_LOGI(TAG_USER_SETTINGS, "===============================================================");
     ESP_LOGI(TAG_USER_SETTINGS, "[Wi-Fi / BACnet-IP]");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_ENABLE_BACNET_IP: %s", USER_ENABLE_BACNET_IP ? "true" : "false");
     ESP_LOGI(TAG_USER_SETTINGS, "USER_WIFI_SSID: %s", USER_WIFI_SSID);
