@@ -7,7 +7,8 @@
 
 #include "User_Setups/Setup_Project_ST7796S.h"
 
-#elif defined(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
+#elif defined(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3) || \
+    defined(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
 
 #include "User_Setups/Setup_Project_ST7789_TDISPLAY_S3.h"
 

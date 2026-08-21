@@ -13,7 +13,7 @@ const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publish
 
 
 const bool USER_ENABLE_BACNET_IP = true;
-const bool USER_WIFI_USE_STATIC_IP = true;
+const bool USER_WIFI_USE_STATIC_IP = false;
 const char USER_WIFI_STATIC_IP_ADDR[] = "10.120.245.97";
 const char USER_WIFI_STATIC_IP_GATEWAY[] = "10.120.245.254";
 const char USER_WIFI_STATIC_IP_NETMASK[] = "255.255.255.0";
@@ -36,7 +36,7 @@ const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION = USER_BACNET_FIRMWARE_REVI
 const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
-const bool USER_ENABLE_BACNET_MSTP = true;
+const bool USER_ENABLE_BACNET_MSTP = false;
 const uint8_t USER_MSTP_MAC_ADDRESS = 33;
 const uint8_t USER_MSTP_MAX_INFO_FRAMES = 1;
 const uint8_t USER_MSTP_MAX_MASTER = 34;
@@ -337,6 +337,8 @@ void User_Settings_Print(void)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7796S 480x320 - test UI");
     #elif defined(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7789 170x320 - LilyGO T-Display-S3 Touch");
+    #elif defined(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: LVGL T-Display-S3 - LilyGO LVGL UI");
     #elif defined(CONFIG_USER_DISPLAY_ST7789_GMT020)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7789 240x320 - GMT020-02-7P");
     #elif defined(CONFIG_USER_DISPLAY_ST7789_HW657A)

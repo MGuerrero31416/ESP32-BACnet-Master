@@ -60,6 +60,7 @@ config USER_SEN54_I2C_PORT
 config USER_TOUCH_CST816
     bool "Enable CST816 touch controller"
     default y if USER_DISPLAY_ST7789_TDISPLAY_S3
+    default y if USER_DISPLAY_LVGL_TDISPLAY_S3
     default n
 
 config USER_TOUCH_CST816_I2C_PORT

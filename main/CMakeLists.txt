@@ -56,6 +56,16 @@ elseif(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
 elseif(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
     list(APPEND APP_SRCS
         "ui/profiles/display_lvgl_tdisplay_s3.cpp"
+        "ui/lvgl/ui_port.c"
+        "ui/lvgl/ui_theme.c"
+        "ui/lvgl/ui_model.c"
+        "ui/lvgl/ui_manager.c"
+        "ui/lvgl/ui_screens.c"
+        "ui/lvgl/screens/screen_measurements.c"
+        "ui/lvgl/screens/screen_air_quality.c"
+        "ui/lvgl/screens/screen_placeholder.c"
+        "ui/lvgl/screens/screen_settings.c"
+        "ui/lvgl/screens/screen_wifi.c"
     )
 
 elseif(CONFIG_USER_DISPLAY_ST7789_GMT020)
@@ -104,6 +114,7 @@ idf_component_register(
         "platform"
         "ui"
         "ui/fonts"
+        "ui/lvgl"
         "app/sensors"
 
     REQUIRES

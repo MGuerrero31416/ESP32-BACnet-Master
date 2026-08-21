@@ -12,6 +12,9 @@ static i2c_master_bus_handle_t bus_handle = NULL;
 static i2c_master_dev_handle_t dev_handle = NULL;
 static i2c_master_dev_handle_t wake_dev_handle = NULL; // Special handle for wake-up
 static bool s_inited = false;
+static TickType_t s_next_idle_probe_tick = 0;
+
+#define CST816_IDLE_PROBE_MS 30
 
 static inline uint16_t clamp_u16(uint16_t v, uint16_t maxv) {
     return (v > maxv) ? maxv : v;
@@ -101,6 +104,17 @@ esp_err_t touch_cst816_read(touch_cst816_point_t *pt)
 {
     if (!s_inited || dev_handle == NULL || pt == NULL) return ESP_ERR_INVALID_STATE;
 
+    pt->pressed = false;
+
+    const bool int_active = (gpio_get_level(CONFIG_USER_TOUCH_CST816_INT_GPIO) == 0);
+    const TickType_t now = xTaskGetTickCount();
+
+    if (!int_active && (int32_t)(now - s_next_idle_probe_tick) < 0) {
+        return ESP_OK;
+    }
+
+    s_next_idle_probe_tick = now + pdMS_TO_TICKS(CST816_IDLE_PROBE_MS);
+
     // WAKE-UP PING: Send a command using the special handle that ignores NACKs.
     // This forces the I2C bus to send a STOP condition, waking up the sleeping CST816.
     uint8_t wake_reg = 0x01;
@@ -117,7 +131,6 @@ esp_err_t touch_cst816_read(touch_cst816_point_t *pt)
 
     
     if (ret != ESP_OK) {
-        pt->pressed = false;
         return ret;
     }
 
