@@ -26,9 +26,9 @@ main/ui/hardware/touch_cst816.h
 components/TFT_eSPI/User_Setups/Setup_Project_ST7789_TDISPLAY_S3.h
 ```
 
-The display, touch, wiring, sensor defaults, and target constraints are the
-same as the [standard T-Display-S3 profile](tdisplay-s3.md). The LVGL profile
-uses the LVGL and ESP LVGL port components for rendering.
+The display, touch, wiring, sensor defaults, and target constraints are for the
+LilyGO T-Display-S3 hardware. The profile uses the LVGL and ESP LVGL port
+components for rendering.
 
 The current defaults assign both CST816 touch and SEN54 to GPIO18/GPIO17.
 Reassign the SEN54 pins before operating touch and SEN54 simultaneously.

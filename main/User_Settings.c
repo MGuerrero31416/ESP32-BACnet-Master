@@ -8,6 +8,11 @@
 
 /* Private WiFi and Adafruit IO credentials are provided in User_Private_Settings.h */
 #include "User_Private_Settings.h"
+
+// Module version string for "Firmware Revision" 
+// Change it to reflect the current firmware version.
+const char USER_BACNET_FIRMWARE_REVISION[] = "2.6b 2026_08_21";
+
 const bool USER_ENABLE_ADAFRUIT_IO = false; //  Enable Adafruit IO MQTT publishing service
 const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publishing SEN54 sensor data. This must exactly match the Feed Key shown in Adafruit IO
 
@@ -30,13 +35,12 @@ const char USER_BACNET_MODEL_NAME[] = "ESP32-WROOM32-SEN54-ST7789";
 const char USER_BACNET_VENDOR_NAME[] = "ESCAP FMS";
 const uint16_t USER_BACNET_VENDOR_ID = 260;
 const char USER_BACNET_LOCATION[] = "SEC-B Ground Floor FMS";
-const char USER_BACNET_FIRMWARE_REVISION[] = "2.6a 2026_08_21";
 // V2.5a added LVGL Lilygo T-Display-S3 Touch.
 const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION = USER_BACNET_FIRMWARE_REVISION;
 const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
-const bool USER_ENABLE_BACNET_MSTP = false;
+const bool USER_ENABLE_BACNET_MSTP = true;
 const uint8_t USER_MSTP_MAC_ADDRESS = 33;
 const uint8_t USER_MSTP_MAX_INFO_FRAMES = 1;
 const uint8_t USER_MSTP_MAX_MASTER = 34;
@@ -327,10 +331,10 @@ void User_Settings_InitDeviceIdentity(void)
 void User_Settings_Print(void)
 {
 #if USER_SETTINGS_PRINT_ENABLE
-    ESP_LOGI(TAG_USER_SETTINGS, " ╔==============================================================╗");
-    ESP_LOGI(TAG_USER_SETTINGS, " ║                          User Settings                       ║");
-    ESP_LOGI(TAG_USER_SETTINGS, " ╠==============================================================╝");
-    ESP_LOGI(TAG_USER_SETTINGS, " ║    FIRMWARE_REVISION: %s", USER_BACNET_FIRMWARE_REVISION);
+    ESP_LOGI(TAG_USER_SETTINGS, "╔==============================================================╗");
+    ESP_LOGI(TAG_USER_SETTINGS, "║                          User Settings                       ║");
+    ESP_LOGI(TAG_USER_SETTINGS, "╠==============================================================╝");
+    ESP_LOGI(TAG_USER_SETTINGS, "║    FIRMWARE_REVISION: %s", USER_BACNET_FIRMWARE_REVISION);
     ESP_LOGI(TAG_USER_SETTINGS, "╚===============================================================");
 
         /* Display hardware profile selected in menuconfig */
@@ -338,8 +342,6 @@ void User_Settings_Print(void)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7796S 480x320 3.5in - colorful UI");
     #elif defined(CONFIG_USER_DISPLAY_ST7796S_TEST)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7796S 480x320 - test UI");
-    #elif defined(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
-        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7789 170x320 - LilyGO T-Display-S3 Touch");
     #elif defined(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: LVGL T-Display-S3 - LilyGO LVGL UI");
     #elif defined(CONFIG_USER_DISPLAY_ST7789_GMT020)
@@ -349,7 +351,7 @@ void User_Settings_Print(void)
     #elif defined(CONFIG_USER_DISPLAY_NONE)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: None");
     #else
-        ESP_LOGI(TAG_USER_SETTINGS, "║Display Hardware Profile: (unknown)");
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: (unknown)");
     #endif
     ESP_LOGI(TAG_USER_SETTINGS, "===============================================================");
     ESP_LOGI(TAG_USER_SETTINGS, "[Wi-Fi / BACnet-IP]");

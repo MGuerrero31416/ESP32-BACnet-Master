@@ -48,11 +48,6 @@ elseif(CONFIG_USER_DISPLAY_ST7796S_TEST)
         "ui/profiles/display_st7796s_test.cpp"
     )
 
-elseif(CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3)
-    list(APPEND APP_SRCS
-        "ui/profiles/display_st7789_tdisplay_s3.cpp"
-    )
-
 elseif(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
     list(APPEND APP_SRCS
         "ui/profiles/display_lvgl_tdisplay_s3.cpp"
@@ -153,7 +148,6 @@ target_link_libraries(
 set_source_files_properties(
     "ui/profiles/display_st7796s.cpp"
     "ui/profiles/display_st7796s_test.cpp"
-    "ui/profiles/display_st7789_tdisplay_s3.cpp"
     "ui/profiles/display_lvgl_tdisplay_s3.cpp"
     PROPERTIES
         COMPILE_OPTIONS "-Wno-error=cpp;-Wno-error=deprecated-enum-enum-conversion"

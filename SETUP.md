@@ -336,14 +336,13 @@ Available profiles:
 ```text
 ST7796S 480x320 3.5in - colorful UI
 ST7796S 480x320 - test UI
-ST7789 170x320 - LilyGO T-Display-S3 Touch
 LVGL T-Display S3 - LilyGO LVGL UI
 ST7789 240x320 - GMT020-02-7P
 ST7789 170x320 - HW657A - Simple UI
 No display
 ```
 
-The T-Display-S3 profiles are available only when the selected target is
+The T-Display-S3 profile is available only when the selected target is
 `esp32s3`. The other profiles are target-independent in Kconfig, but their
 GPIO mappings must still match the physical processor board.
 
@@ -359,7 +358,6 @@ The current `main/Kconfig.projbuild` also derives the SEN54 pins and DS18B20 bui
 | ------------------- | --------: | --------: | -------- |
 | ST7796S colorful UI |     GPIO4 |     GPIO5 | Enabled  |
 | ST7796S test UI     |     GPIO4 |     GPIO5 | Enabled  |
-| T-Display-S3 Touch  |    GPIO18 |    GPIO17 | Disabled |
 | T-Display-S3 LVGL   |    GPIO18 |    GPIO17 | Disabled |
 | GMT020-02-7P        |    GPIO13 |    GPIO14 | Disabled |
 | ST7789 HW657A       |    GPIO13 |    GPIO14 | Disabled |
@@ -389,7 +387,6 @@ Current mapping:
 | ----------------------------------- | ---------------------------------------------- |
 | `CONFIG_USER_DISPLAY_ST7796S`          | `main/ui/profiles/display_st7796s.cpp`          |
 | `CONFIG_USER_DISPLAY_ST7796S_TEST`     | `main/ui/profiles/display_st7796s_test.cpp`     |
-| `CONFIG_USER_DISPLAY_ST7789_TDISPLAY_S3` | `main/ui/profiles/display_st7789_tdisplay_s3.cpp` |
 | `CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3` | `main/ui/profiles/display_lvgl_tdisplay_s3.cpp` |
 | `CONFIG_USER_DISPLAY_ST7789_GMT020`    | `main/ui/profiles/display_st7789_gmt020.cpp`    |
 | `CONFIG_USER_DISPLAY_ST7789_HW657A`    | `main/ui/profiles/display_st7789_hw657a.cpp`    |

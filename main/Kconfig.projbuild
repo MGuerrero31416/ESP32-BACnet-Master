@@ -11,10 +11,6 @@ menu "Project hardware"
             bool "ST7796S 480x320 - test UI"
 
 
-        config USER_DISPLAY_ST7789_TDISPLAY_S3
-            bool "ST7789 170x320 - LilyGO T-Display-S3 Touch"
-            depends on IDF_TARGET_ESP32S3
-
         config USER_DISPLAY_LVGL_TDISPLAY_S3
 		bool "LVGL T-Display S3 - LilyGO LVGL UI"
 		depends on IDF_TARGET_ESP32S3
@@ -36,7 +32,6 @@ config USER_SEN54_SDA_GPIO
     default 4 if USER_DISPLAY_ST7796S_TEST
     default 13 if USER_DISPLAY_ST7789_GMT020
     default 13 if USER_DISPLAY_ST7789_HW657A
-    default 18 if USER_DISPLAY_ST7789_TDISPLAY_S3
     default 18 if USER_DISPLAY_LVGL_TDISPLAY_S3
     default 4
 
@@ -46,20 +41,17 @@ config USER_SEN54_SCL_GPIO
     default 5 if USER_DISPLAY_ST7796S_TEST
     default 14 if USER_DISPLAY_ST7789_GMT020
     default 14 if USER_DISPLAY_ST7789_HW657A
-    default 17 if USER_DISPLAY_ST7789_TDISPLAY_S3
     default 17 if USER_DISPLAY_LVGL_TDISPLAY_S3
     default 5
 
 config USER_SEN54_I2C_PORT
     int
-    default 0 if USER_DISPLAY_ST7789_TDISPLAY_S3
     default 0 if USER_DISPLAY_LVGL_TDISPLAY_S3
     default 0
 
 # CST816 touch (LilyGO T-Display-S3 only)
 config USER_TOUCH_CST816
     bool "Enable CST816 touch controller"
-    default y if USER_DISPLAY_ST7789_TDISPLAY_S3
     default y if USER_DISPLAY_LVGL_TDISPLAY_S3
     default n
 
@@ -93,7 +85,6 @@ config USER_SENSOR_DS18B20
     default y if USER_DISPLAY_ST7796S_TEST
     default n if USER_DISPLAY_ST7789_GMT020
     default n if USER_DISPLAY_ST7789_HW657A
-    default n if USER_DISPLAY_ST7789_TDISPLAY_S3
     default n if USER_DISPLAY_LVGL_TDISPLAY_S3
     default n
 
