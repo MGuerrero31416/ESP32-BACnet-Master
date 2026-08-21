@@ -27,20 +27,20 @@ esp_err_t touch_cst816_init(void)
     esp_err_t ret;
     int port = CONFIG_USER_TOUCH_CST816_I2C_PORT;
 
-    // 1. Get or create the I2C bus
-    ret = i2c_master_get_bus_handle(port, &bus_handle);
-    if (ret == ESP_ERR_INVALID_STATE || ret == ESP_ERR_NOT_FOUND) {
-        i2c_master_bus_config_t bus_config = {
-            .clk_source = I2C_CLK_SRC_DEFAULT,
-            .i2c_port = port,
-            .sda_io_num = CONFIG_USER_TOUCH_CST816_SDA_GPIO,
-            .scl_io_num = CONFIG_USER_TOUCH_CST816_SCL_GPIO,
-            .glitch_ignore_cnt = 7,
-            .flags.enable_internal_pullup = true,
-        };
-        ret = i2c_new_master_bus(&bus_config, &bus_handle);
-        if (ret != ESP_OK) return ret;
-    } else if (ret != ESP_OK) return ret;
+    // 1. Create or reuse the shared T-Display-S3 I2C bus
+    i2c_master_bus_config_t bus_config = {
+        .clk_source = I2C_CLK_SRC_DEFAULT,
+        .i2c_port = port,
+        .sda_io_num = CONFIG_USER_TOUCH_CST816_SDA_GPIO,
+        .scl_io_num = CONFIG_USER_TOUCH_CST816_SCL_GPIO,
+        .glitch_ignore_cnt = 7,
+        .flags.enable_internal_pullup = true,
+    };
+    ret = i2c_new_master_bus(&bus_config, &bus_handle);
+    if (ret == ESP_ERR_INVALID_STATE) {
+        ret = i2c_master_get_bus_handle(port, &bus_handle);
+    }
+    if (ret != ESP_OK) return ret;
 
     // 2. Add normal CST816 device (100kHz, ACK check enabled)
     i2c_device_config_t dev_cfg = {
