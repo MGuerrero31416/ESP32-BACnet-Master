@@ -61,6 +61,9 @@ elseif(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
         "ui/lvgl/screens/screen_placeholder.c"
         "ui/lvgl/screens/screen_settings.c"
         "ui/lvgl/screens/screen_wifi.c"
+        "ui/lvgl/screens/screen_wifi_password.c"
+        "ui/lvgl/screens/screen_sensor_settings.c"
+        "ui/lvgl/screens/screen_system.c"
     )
 
 elseif(CONFIG_USER_DISPLAY_ST7789_GMT020)

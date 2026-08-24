@@ -8,16 +8,31 @@ static lv_obj_t *create(void)
 
     ui_theme_title_create(content, "Settings");
 
-    lv_obj_t *wifi_tile = ui_theme_card_create(content, 138, 92);
+    lv_obj_t *wifi_tile = ui_theme_card_create(content, 220, 32);
     lv_obj_t *icon = ui_theme_label_create(
-        wifi_tile, LV_SYMBOL_WIFI, UI_FONT_ICON, UI_COLOR_ACCENT);
-    lv_obj_align(icon, LV_ALIGN_TOP_MID, 0, 6);
+        wifi_tile, LV_SYMBOL_WIFI, UI_FONT_SMALL, UI_COLOR_ACCENT);
+    lv_obj_align(icon, LV_ALIGN_LEFT_MID, 8, 0);
 
     lv_obj_t *caption = ui_theme_label_create(
-        wifi_tile, "Wi-Fi", UI_FONT_LABEL, UI_COLOR_VALUE);
-    lv_obj_align(caption, LV_ALIGN_BOTTOM_MID, 0, -6);
+        wifi_tile, "Wi-Fi", UI_FONT_SMALL, UI_COLOR_VALUE);
+    lv_obj_align(caption, LV_ALIGN_LEFT_MID, 34, 0);
 
     ui_manager_bind_nav(wifi_tile, "wifi");
+
+    lv_obj_t *sensor_settings_tile = ui_theme_card_create(content, 220, 32);
+    lv_obj_t *sensor_settings_caption = ui_theme_label_create(
+        sensor_settings_tile,
+        "SensorSettings",
+        UI_FONT_SMALL,
+        UI_COLOR_VALUE);
+    lv_obj_align(sensor_settings_caption, LV_ALIGN_LEFT_MID, 10, 0);
+    ui_manager_bind_nav(sensor_settings_tile, "sensor_settings");
+
+    lv_obj_t *system_tile = ui_theme_card_create(content, 220, 32);
+    lv_obj_t *system_caption = ui_theme_label_create(
+        system_tile, "System", UI_FONT_SMALL, UI_COLOR_VALUE);
+    lv_obj_align(system_caption, LV_ALIGN_LEFT_MID, 10, 0);
+    ui_manager_bind_nav(system_tile, "system");
 
     return screen;
 }
