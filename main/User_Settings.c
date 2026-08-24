@@ -11,9 +11,9 @@
 
 // Module version string for "Firmware Revision" 
 // Change it to reflect the current firmware version.
-const char USER_BACNET_FIRMWARE_REVISION[] = "2.6b 2026_08_21";
+const char USER_BACNET_FIRMWARE_REVISION[] = "2.7a 2026_08_24";
 
-const bool USER_ENABLE_ADAFRUIT_IO = false; //  Enable Adafruit IO MQTT publishing service
+const bool USER_ENABLE_ADAFRUIT_IO = true; //  Enable Adafruit IO MQTT publishing service
 const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publishing SEN54 sensor data. This must exactly match the Feed Key shown in Adafruit IO
 
 
@@ -40,7 +40,7 @@ const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION = USER_BACNET_FIRMWARE_REVI
 const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
-const bool USER_ENABLE_BACNET_MSTP = true;
+const bool USER_ENABLE_BACNET_MSTP = false;
 const uint8_t USER_MSTP_MAC_ADDRESS = 33;
 const uint8_t USER_MSTP_MAX_INFO_FRAMES = 1;
 const uint8_t USER_MSTP_MAX_MASTER = 34;

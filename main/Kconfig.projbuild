@@ -13,7 +13,6 @@ menu "Project hardware"
 
         config USER_DISPLAY_LVGL_TDISPLAY_S3
 		bool "LVGL T-Display S3 - LilyGO LVGL UI"
-		depends on IDF_TARGET_ESP32S3
 
         config USER_DISPLAY_ST7789_GMT020
             bool "ST7789 240x320 - GMT020-02-7P"
@@ -87,5 +86,23 @@ config USER_SENSOR_DS18B20
     default n if USER_DISPLAY_ST7789_HW657A
     default n if USER_DISPLAY_LVGL_TDISPLAY_S3
     default n
+
+# MS/TP RS-485 transceiver (MAX485). GPIO5/16/17 collide with the
+# T-Display-S3 board's TFT reset and touch I2C pins, so that profile
+# uses free header pins instead.
+config USER_MSTP_UART_TX_GPIO
+    int
+    default 1 if USER_DISPLAY_LVGL_TDISPLAY_S3
+    default 17
+
+config USER_MSTP_UART_RX_GPIO
+    int
+    default 2 if USER_DISPLAY_LVGL_TDISPLAY_S3
+    default 16
+
+config USER_MSTP_UART_DE_GPIO
+    int
+    default 3 if USER_DISPLAY_LVGL_TDISPLAY_S3
+    default 5
 
 endmenu

@@ -1,5 +1,7 @@
 #include "mstp_rs485.h"
 
+#include "sdkconfig.h"
+
 #include "driver/gpio.h"
 #include "driver/uart.h"
 #include "esp_log.h"
@@ -9,9 +11,9 @@
 #include "User_Settings.h"
 
 #define MSTP_UART_PORT UART_NUM_2
-#define MSTP_UART_TX_PIN GPIO_NUM_17
-#define MSTP_UART_RX_PIN GPIO_NUM_16
-#define MSTP_UART_DE_PIN GPIO_NUM_5
+#define MSTP_UART_TX_PIN ((gpio_num_t)CONFIG_USER_MSTP_UART_TX_GPIO)
+#define MSTP_UART_RX_PIN ((gpio_num_t)CONFIG_USER_MSTP_UART_RX_GPIO)
+#define MSTP_UART_DE_PIN ((gpio_num_t)CONFIG_USER_MSTP_UART_DE_GPIO)
 #define MSTP_UART_BAUD_DEFAULT 38400U
 #define MSTP_UART_RX_BUF_SIZE 512
 #define MSTP_UART_TX_BUF_SIZE 0
