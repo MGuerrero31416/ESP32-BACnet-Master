@@ -13,15 +13,13 @@ extern "C" {
 /**
  * @brief Start the Adafruit IO MQTT publishing service.
  *
- * The service publishes the current SEN54:
- *
- * - Temperature
- * - Relative humidity
  * - PM2.5
  * - VOC Index
+ * - Temperature
+ * - Relative humidity
  *
- * Measurements are published every 10 seconds to the configured
- * Adafruit IO feed.
+ * Measurements are published to separate Adafruit IO feeds derived from
+ * USER_AIO_FEED_KEY.
  *
  * @param task_handle Receives the publishing task handle.
  *

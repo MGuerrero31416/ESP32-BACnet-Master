@@ -44,7 +44,7 @@ static const char *TAG = "adafruit_io";
 
 
 #define AIO_PUBLISH_INTERVAL_MS 60000U
-#define AIO_SENSOR_STARTUP_DELAY_MS 8000U
+#define AIO_SENSOR_STARTUP_DELAY_MS 120000U // delay before first publish to allow SEN54 to complete startup and obtain valid measurements
 
 #define AIO_PUBLISH_TASK_STACK_SIZE 4096U
 #define AIO_PUBLISH_TASK_PRIORITY 3U
@@ -60,7 +60,10 @@ static TaskHandle_t s_publish_task_handle = NULL;
 
 static bool s_service_started = false;
 
-static char s_feed_topic[AIO_TOPIC_BUFFER_SIZE];
+static char s_temperature_topic[AIO_TOPIC_BUFFER_SIZE];
+static char s_humidity_topic[AIO_TOPIC_BUFFER_SIZE];
+static char s_pm25_topic[AIO_TOPIC_BUFFER_SIZE];
+static char s_voc_topic[AIO_TOPIC_BUFFER_SIZE];
 static char s_errors_topic[AIO_TOPIC_BUFFER_SIZE];
 static char s_throttle_topic[AIO_TOPIC_BUFFER_SIZE];
 
@@ -111,9 +114,36 @@ static bool adafruit_io_build_topic(
 static bool adafruit_io_build_topics(void)
 {
     if (!adafruit_io_build_topic(
-            s_feed_topic,
-            sizeof(s_feed_topic),
-            "%s/feeds/%s",
+            s_temperature_topic,
+            sizeof(s_temperature_topic),
+            "%s/feeds/%s-temp",
+            USER_AIO_USERNAME,
+            USER_AIO_FEED_KEY)) {
+        return false;
+    }
+
+    if (!adafruit_io_build_topic(
+            s_humidity_topic,
+            sizeof(s_humidity_topic),
+            "%s/feeds/%s-hum",
+            USER_AIO_USERNAME,
+            USER_AIO_FEED_KEY)) {
+        return false;
+    }
+
+    if (!adafruit_io_build_topic(
+            s_pm25_topic,
+            sizeof(s_pm25_topic),
+            "%s/feeds/%s-pm25",
+            USER_AIO_USERNAME,
+            USER_AIO_FEED_KEY)) {
+        return false;
+    }
+
+    if (!adafruit_io_build_topic(
+            s_voc_topic,
+            sizeof(s_voc_topic),
+            "%s/feeds/%s-voc",
             USER_AIO_USERNAME,
             USER_AIO_FEED_KEY)) {
         return false;
@@ -204,8 +234,23 @@ static void adafruit_io_mqtt_event_handler(
 
             ESP_LOGI(
                 TAG,
-                "Publishing to: %s",
-                s_feed_topic);
+                "Publishing temperature to: %s",
+                s_temperature_topic);
+
+            ESP_LOGI(
+                TAG,
+                "Publishing humidity to: %s",
+                s_humidity_topic);
+
+            ESP_LOGI(
+                TAG,
+                "Publishing PM2.5 to: %s",
+                s_pm25_topic);
+
+            ESP_LOGI(
+                TAG,
+                "Publishing VOC Index to: %s",
+                s_voc_topic);
 
             adafruit_io_subscribe_diagnostics(
                 event->client);
@@ -267,15 +312,8 @@ static void adafruit_io_mqtt_event_handler(
 /**
  * @brief Read the current SEN54 BACnet AI values and publish them.
  *
- * Payload format:
- *
- * v=1,t=24.37,h=56.20,p=8.40,o=112.00
- *
- * v = payload format version
- * t = SEN54 temperature
- * h = SEN54 relative humidity
- * p = SEN54 PM2.5
- * o = SEN54 VOC Index
+ * Temperature, humidity, PM2.5, and VOC Index are published as separate
+ * raw numeric payloads.
  */
 static void adafruit_io_publish_measurements(void)
 {
@@ -321,19 +359,43 @@ static void adafruit_io_publish_measurements(void)
         return;
     }
 
-    char payload[AIO_PAYLOAD_BUFFER_SIZE];
+    char temperature_payload[AIO_PAYLOAD_BUFFER_SIZE];
+    char humidity_payload[AIO_PAYLOAD_BUFFER_SIZE];
+    char pm25_payload[AIO_PAYLOAD_BUFFER_SIZE];
+    char voc_payload[AIO_PAYLOAD_BUFFER_SIZE];
 
-    const int payload_length = snprintf(
-        payload,
-        sizeof(payload),
-        "v=1,t=%.2f,h=%.2f,p=%.2f,o=%.2f",
-        temperature,
-        humidity,
-        pm25,
+    const int temperature_payload_length = snprintf(
+        temperature_payload,
+        sizeof(temperature_payload),
+        "%.2f",
+        temperature);
+
+    const int humidity_payload_length = snprintf(
+        humidity_payload,
+        sizeof(humidity_payload),
+        "%.2f",
+        humidity);
+
+    const int pm25_payload_length = snprintf(
+        pm25_payload,
+        sizeof(pm25_payload),
+        "%.2f",
+        pm25);
+
+    const int voc_payload_length = snprintf(
+        voc_payload,
+        sizeof(voc_payload),
+        "%.2f",
         voc);
 
-    if (payload_length < 0 ||
-        (size_t)payload_length >= sizeof(payload)) {
+    if (temperature_payload_length < 0 ||
+        (size_t)temperature_payload_length >= sizeof(temperature_payload) ||
+        humidity_payload_length < 0 ||
+        (size_t)humidity_payload_length >= sizeof(humidity_payload) ||
+        pm25_payload_length < 0 ||
+        (size_t)pm25_payload_length >= sizeof(pm25_payload) ||
+        voc_payload_length < 0 ||
+        (size_t)voc_payload_length >= sizeof(voc_payload)) {
         ESP_LOGE(
             TAG,
             "Telemetry payload buffer is too small");
@@ -344,15 +406,42 @@ static void adafruit_io_publish_measurements(void)
      * QoS 1 requests acknowledgement from Adafruit IO.
      * Retained publishing is disabled.
      */
-    const int message_id = esp_mqtt_client_publish(
+    const int temperature_message_id = esp_mqtt_client_publish(
         s_mqtt_client,
-        s_feed_topic,
-        payload,
-        payload_length,
+        s_temperature_topic,
+        temperature_payload,
+        temperature_payload_length,
         1,
         0);
 
-    if (message_id < 0) {
+    const int humidity_message_id = esp_mqtt_client_publish(
+        s_mqtt_client,
+        s_humidity_topic,
+        humidity_payload,
+        humidity_payload_length,
+        1,
+        0);
+
+    const int pm25_message_id = esp_mqtt_client_publish(
+        s_mqtt_client,
+        s_pm25_topic,
+        pm25_payload,
+        pm25_payload_length,
+        1,
+        0);
+
+    const int voc_message_id = esp_mqtt_client_publish(
+        s_mqtt_client,
+        s_voc_topic,
+        voc_payload,
+        voc_payload_length,
+        1,
+        0);
+
+    if (temperature_message_id < 0 ||
+        humidity_message_id < 0 ||
+        pm25_message_id < 0 ||
+        voc_message_id < 0) {
         ESP_LOGW(
             TAG,
             "Failed to queue telemetry publish");
@@ -361,8 +450,11 @@ static void adafruit_io_publish_measurements(void)
 
     ESP_LOGI(
         TAG,
-        "Published: %s",
-        payload);
+        "Published temperature: %s, humidity: %s, PM2.5: %s, VOC Index: %s",
+        temperature_payload,
+        humidity_payload,
+        pm25_payload,
+        voc_payload);
 }
 
 /**
