@@ -18,10 +18,28 @@
 
 static TFT_eSPI tft;
 static const char *TAG = "display_lvgl";
+static uint8_t s_backlight_percent = 25;
 
 /* 170x320 panel in landscape orientation */
 #define DISP_WIDTH  320
 #define DISP_HEIGHT 170
+
+static uint8_t brightness_percent_to_pwm(uint8_t percent)
+{
+    if (percent > 100) {
+        percent = 100;
+    }
+
+    uint8_t duty = (uint8_t)((percent * 255u) / 100u);
+
+#if defined(TFT_BACKLIGHT_ON)
+    if (TFT_BACKLIGHT_ON == LOW) {
+        duty = (uint8_t)(255u - duty);
+    }
+#endif
+
+    return duty;
+}
 
 static void panel_flush(const lv_area_t *area, lv_color_t *pixels)
 {
@@ -82,7 +100,9 @@ extern "C" void display_init(void)
 
 #if defined(TFT_BL) && (TFT_BL >= 0)
     if (ledcAttach(TFT_BL, 20000, 8)) {
-        ledcWrite(TFT_BL, 64); /* Approximately 25% */
+        ledcWrite(
+            TFT_BL,
+            brightness_percent_to_pwm(s_backlight_percent));
     } else {
         ESP_LOGW(TAG, "Failed to initialize backlight PWM");
     }
@@ -163,4 +183,17 @@ extern "C" void display_update_values(
     float temp_ds18b20)
 {
     ui_model_set_values(pm25, temperature, humidity, voc, temp_ds18b20);
+}
+
+extern "C" void display_set_brightness(uint8_t percent)
+{
+    if (percent > 100) {
+        percent = 100;
+    }
+
+    s_backlight_percent = percent;
+
+#if defined(TFT_BL) && (TFT_BL >= 0)
+    ledcWrite(TFT_BL, brightness_percent_to_pwm(percent));
+#endif
 }

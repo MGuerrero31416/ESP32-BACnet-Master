@@ -22,10 +22,15 @@ main/ui/
       screen_placeholder.c
       screen_settings.c
       screen_wifi.c
+      screen_wifi_password.c
+      screen_sensor_settings.c
+      screen_system.c
 ```
 
 Carousel order: Measurements, Air Quality, Placeholder, Settings. Wi-Fi is a
-drill-down page reached from the Settings tile.
+    drill-down page reached from the Settings menu. Selecting a scanned SSID opens
+    the Wi-Fi Password page; Sensor Settings and System are the other drill-down
+    pages.
 
 ## Layers
 
