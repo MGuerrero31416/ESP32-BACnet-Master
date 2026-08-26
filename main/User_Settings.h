@@ -39,6 +39,13 @@ extern const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION;
 extern const char USER_BACNET_SERIAL_NUMBER[];
 extern const uint32_t USER_BACNET_DEVICE_INSTANCE;
 extern const int USER_OVERRIDE_NVS_ON_FLASH;
+extern const uint32_t USER_LORA_EXPECTED_DEVICE_ID;
+extern const uint32_t USER_LORA_SUPPORTED_VERSION;
+extern const uint32_t USER_LORA_PACKET_SIZE;
+
+#if defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) && CONFIG_USER_DISPLAY_LORA_GATEWAY
+#define HW_PROFILE_LORA_GATEWAY 1
+#endif
 
 /* BBMD foreign device registration */
 extern const uint8_t USER_BBMD_IP_OCTET_1;
@@ -58,9 +65,11 @@ extern const uint32_t USER_MSTP_BAUD_RATE;
 /* BACnet object defaults */
 #define USER_AV_COUNT 16
 #define USER_BV_COUNT 4
-#define USER_AI_COUNT 8
+#define USER_AI_COUNT 9
 #define USER_BI_COUNT 4
 #define USER_BO_COUNT 4
+
+#define LORA_PACKET_MAX_LEN 32U
 
 /*
  * Logical positions in the USER_AI_* parallel arrays.
@@ -76,7 +85,8 @@ typedef enum {
     USER_AI_SEN54_PM2_5,
     USER_AI_SEN54_PM4_0,
     USER_AI_SEN54_PM10,
-    USER_AI_DS18B20_TEMPERATURE
+    USER_AI_DS18B20_TEMPERATURE,
+    USER_AI_LORA_STATUS
 } user_ai_role_t;
 
 /*

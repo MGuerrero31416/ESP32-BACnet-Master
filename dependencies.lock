@@ -194,7 +194,7 @@ dependencies:
       type: service
     version: 1.7.19~2
   espressif/dm9051:
-    component_hash: 417654826696fb63f460f6d0f45e9658d80aa3b3fef328c9376c7dea3661fdbf
+    component_hash: 52d13af7181a1d7cc2ca2958e640e395a1c825a8d6467540a526b8b7f115bdb4
     dependencies:
     - name: idf
       require: private
@@ -202,7 +202,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com
       type: service
-    version: 1.1.0
+    version: 1.1.1
   espressif/esp-dsp:
     component_hash: ed9ac175b14e0414399a2b33c525579414b5bad19a2a67b12ea212def96f9a98
     dependencies:
@@ -268,7 +268,7 @@ dependencies:
       type: service
     version: 2.1.0
   espressif/ksz8851snl:
-    component_hash: 7454eae7efba7a3302fa42c6107bcecc91da979c3bf5a237dc009b899950e3a4
+    component_hash: 248c4eafb0359941810a304f197ec9c3a5a898a89d18a12dae29343ad869f6bd
     dependencies:
     - name: idf
       require: private
@@ -276,7 +276,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com
       type: service
-    version: 1.1.0
+    version: 1.2.0
   espressif/mdns:
     component_hash: e81ca7a7f53ea34e78274df054da692c272e1315572876b237b1748e267c013b
     dependencies:
@@ -328,7 +328,7 @@ dependencies:
       type: idf
     version: 6.0.2
   joltwallet/littlefs:
-    component_hash: 01faa388c6305fe77fd6962cda6171e753033458f24f8fae9e9d932e3d817a4c
+    component_hash: 3af20a3d75c49db9dc2286fd50862c34055c9f578419ad1f2bf7ed3ed01391fe
     dependencies:
     - name: idf
       require: private
@@ -336,7 +336,7 @@ dependencies:
     source:
       registry_url: https://components.espressif.com
       type: service
-    version: 1.22.1
+    version: 1.22.3
   lvgl/lvgl:
     component_hash: 948bff879a345149b83065535bbc4a026ce9f47498a22881e432a264b9098015
     dependencies: []
@@ -344,12 +344,21 @@ dependencies:
       registry_url: https://components.espressif.com/
       type: service
     version: 8.3.11
+  u8g2:
+    component_hash: bb168d45063e9757ec51ec8ecbd1d3a12d34cf8540bccac0a4354f2ecf80c2e3
+    dependencies: []
+    source:
+      git: https://github.com/olikraus/u8g2.git
+      path: .
+      type: git
+    version: c2935e962cbcaa9ed76b7cae30f47be14c860651
 direct_dependencies:
 - espressif/arduino-esp32
 - espressif/esp_lvgl_port
 - espressif/mqtt
 - idf
 - lvgl/lvgl
-manifest_hash: b1e296c92a436ab7a80463d05f03f016aa4221e6e7d6629976c0673724b1b889
+- u8g2
+manifest_hash: c4d99374e54d35f4c630749d8d3b3145d0af58d9e12e1b4c96c5a1f8537dab4c
 target: esp32s3
 version: 3.0.0

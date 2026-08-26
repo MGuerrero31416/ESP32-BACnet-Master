@@ -1,0 +1,47 @@
+Repository: MGuerrero31416/ESP32-BACnet-Master
+Branch: lora
+
+Work on the existing `lora` branch.
+
+Add support for the LoRa 32 V4 SX1262 as a LoRa receiver/gateway while preserving all existing BACnet MS/TP functionality and all other hardware profiles.
+
+Packet format (little-endian, packed, total 26 bytes):
+  [0]     uint8_t  VERSION
+  [1-4]   uint32_t DEVICE_ID
+  [5-8]   uint32_t SEQUENCE
+  [9-12]  float    TEMPERATURE   (IEEE-754)
+  [13-16] float    HUMIDITY      (IEEE-754)
+  [17-20] float    PM2_5         (IEEE-754)
+  [21-24] float    VOC           (IEEE-754)
+  [25]    uint8_t  STATUS
+
+Implement as a new hardware profile `HW_PROFILE_LORA_GATEWAY` using the existing hardware-profile architecture. Integrate it into Kconfig / CMakeLists / profile selection so it is selectable at build time without breaking other profiles.
+
+Include a short comment block at the top of the new profile file describing the packet format and validation rules.
+Provide a clear, unit-testable `validate_lora_packet()` (or equivalent) that returns success/failure + reason code.
+
+Validation (reject + log/counter before any BACnet update):
+1. SX1262 CRC (use existing radio mechanism)
+2. Length == 26
+3. VERSION matches supported constant(s)
+4. DEVICE_ID matches the configured sensor ID for this gateway
+5. SEQUENCE is strictly newer than last accepted (reject duplicates & older; gaps OK)
+6. Basic range checks on TEMPERATURE, HUMIDITY, PM2_5, VOC
+
+Only after all checks pass, update internal sensor state and the corresponding BACnet objects for TEMPERATURE / HUMIDITY / PM2_5 / VOC / STATUS.
+
+Reuse radio configuration, pins and SX1262 usage from https://github.com/MGuerrero31416/ESP32-SX1262-LoRa-Link-Test.
+Do not add any SEN54 hardware or driver code.
+Do not change the MS/TP stack except where needed to expose the new sensor values.
+Keep packet parsing safe (packed struct + explicit length checks; avoid alignment/aliasing UB).
+Define explicit packet-size and protocol-version constants.
+Add concise logs and/or counters for each rejection reason.
+
+First inspect the existing project architecture and the Link-Test implementation, then make the minimum required changes that follow the project’s existing coding and profile conventions. Do not redesign unrelated parts.
+
+Acceptance checklist:
+- HW_PROFILE_LORA_GATEWAY builds and is selectable via the existing mechanism
+- All other profiles still build unchanged
+- Valid packets update the BACnet objects
+- Invalid packets are rejected with a clear reason
+- No SEN54 code present in the gateway profile

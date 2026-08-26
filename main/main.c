@@ -15,7 +15,11 @@
 #include "app_supervisor.h"      /* Run periodic display/status maintenance */
 #include "bacnet_app.h"          /* Initialize and start the BACnet runtime */
 #include "display.h"             /* Initialize the physical display */
+#include "lora_gateway.h"        /* Start LoRa receiver/gateway task */
+#if !defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) || \
+    !CONFIG_USER_DISPLAY_LORA_GATEWAY
 #include "sensor_service.h"      /* Start SEN54 and DS18B20 measurements */
+#endif
 #include "stack_profiler.h"      /* Monitor FreeRTOS task stack usage */
 #include "adafruit_io_service.h" /* Publish sensor data to Adafruit IO */
 
@@ -27,7 +31,11 @@ static TaskHandle_t bacnet_rx_task_handle = NULL;
 static TaskHandle_t bacnet_mstp_rx_task_handle = NULL;
 static TaskHandle_t bacnet_core_task_handle = NULL;
 static TaskHandle_t bacnet_cov_task_handle = NULL;
+#if !defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) || \
+    !CONFIG_USER_DISPLAY_LORA_GATEWAY
 static TaskHandle_t sen54_task_handle = NULL;
+#endif
+static TaskHandle_t lora_gateway_task_handle = NULL;
 static TaskHandle_t adafruit_io_task_handle = NULL;
 
 void app_main(void)
@@ -40,7 +48,12 @@ void app_main(void)
         .bacnet_mstp_rx = &bacnet_mstp_rx_task_handle,
         .bacnet_core = &bacnet_core_task_handle,
         .bacnet_cov = &bacnet_cov_task_handle,
+    #if !defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) || \
+        !CONFIG_USER_DISPLAY_LORA_GATEWAY
         .sensor = &sen54_task_handle,
+    #else
+        .sensor = NULL,
+    #endif
     };
 
     stack_profiler_init(&profiler_task_handles);
@@ -65,8 +78,14 @@ void app_main(void)
     ESP_ERROR_CHECK(
         bacnet_app_start(&task_handles));           // Start BACnet runtime tasks
 
+#if defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) && \
+    CONFIG_USER_DISPLAY_LORA_GATEWAY
+    ESP_ERROR_CHECK(
+        lora_gateway_start(&lora_gateway_task_handle));
+#else
     ESP_ERROR_CHECK(
         sensor_service_start(&sen54_task_handle));  // Start SEN54 and DS18B20 sensor acquisition task
+#endif
 
     if (USER_ENABLE_ADAFRUIT_IO) {
         ESP_LOGI(

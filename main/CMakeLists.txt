@@ -5,10 +5,7 @@ set(APP_SRCS
 
     "app/app_storage.c"
     "app/app_supervisor.c"
-    "app/sen54_bacnet_config.c"
-    "app/sensor_service.c"
     "app/stack_profiler.c"
-    "app/sensors/sen54_sensor_service.c"
 
     "bacnet/bacnet_app.c"
     "bacnet/bacnet_coordinator.c"
@@ -25,6 +22,14 @@ set(APP_SRCS
 
     "User_Settings.c"
 )
+
+if(NOT CONFIG_USER_DISPLAY_LORA_GATEWAY)
+    list(APPEND APP_SRCS
+        "app/sen54_bacnet_config.c"
+        "app/sensor_service.c"
+        "app/sensors/sen54_sensor_service.c"
+    )
+endif()
 
 if(CONFIG_USER_TOUCH_CST816)
     list(APPEND APP_SRCS
@@ -76,6 +81,14 @@ elseif(CONFIG_USER_DISPLAY_ST7789_HW657A)
         "ui/profiles/display_st7789_hw657a.cpp"
     )
 
+elseif(CONFIG_USER_DISPLAY_LORA_GATEWAY)
+    list(APPEND APP_SRCS
+        "ui/profiles/display_lora_gateway.c"
+        "app/lora_gateway.c"
+        "platform/lora_hal.c"
+        "platform/sx1262.c"
+    )
+
 elseif(CONFIG_USER_DISPLAY_NONE)
     list(APPEND APP_SRCS
         "ui/profiles/display_none.c"
@@ -89,9 +102,19 @@ set(REQUIRED_COMPONENTS
     bacnet-stack
     TFT_eSPI
     espressif__arduino-esp32
-    sen54
     ds18b20
 )
+
+if(NOT CONFIG_USER_DISPLAY_LORA_GATEWAY)
+    list(APPEND REQUIRED_COMPONENTS
+        sen54
+    )
+else()
+    list(APPEND REQUIRED_COMPONENTS
+        u8g2
+        esp_driver_i2c
+    )
+endif()
 
 if(CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3)
     list(APPEND REQUIRED_COMPONENTS
@@ -126,6 +149,7 @@ idf_component_register(
         esp_netif
         driver
         esp_driver_gpio
+        esp_driver_spi
         esp_driver_uart
         esp_timer
         mqtt
