@@ -18,6 +18,7 @@ The device has been tested on a large Metasys ADX production site using:
 * SEN54 temperature, humidity, VOC, and particulate measurements
 * SEN54 configuration, maintenance commands, and diagnostic status
 * Optional DS18B20 temperature measurement and calibration offset
+* Heltec WiFi LoRa 32 V4 SX1262 gateway receiver profile
 * Selectable ESP32 and ESP32-S3 hardware/display profiles
 * TFT_eSPI and LVGL display implementations
 * Optional CST816 capacitive touch support

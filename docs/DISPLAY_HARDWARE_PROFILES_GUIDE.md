@@ -7,7 +7,8 @@ A display profile is a compile-time combination of:
 * one UI implementation;
 * one display controller and GPIO configuration;
 * one resolution and SPI configuration;
-* optional backlight and touch settings.
+* optional backlight and touch settings;
+* for gateway profiles, the radio and auxiliary display hardware.
 
 The application uses only the common interface in:
 
@@ -24,7 +25,7 @@ The selected profile determines the UI and physical display setup.
 | `main/Kconfig.projbuild`                            | Menuconfig profile selection and profile-specific defaults |
 | `main/CMakeLists.txt`                               | Compiles exactly one UI implementation                     |
 | `main/ui/display.h`                                 | Common application-facing display API                      |
-| `main/ui/profiles/display_*.cpp`                    | UI layout and drawing implementation                       |
+| `main/ui/profiles/display_*.*`                      | UI layout and drawing implementation                       |
 | `components/TFT_eSPI/User_Setup.h`                  | Selects the matching TFT_eSPI setup                        |
 | `components/TFT_eSPI/User_Setups/Setup_Project_*.h` | Controller, dimensions, pins and SPI settings              |
 
@@ -38,7 +39,15 @@ CONFIG_USER_DISPLAY_<PROFILE>
         +--> Setup_Project_<Profile>.h
 ```
 
+The last step applies to TFT_eSPI profiles. Non-TFT profiles may select a
+different display driver and additional hardware sources instead.
+
 Exactly one display profile must be selected.
+
+The `CONFIG_USER_DISPLAY_LORA_GATEWAY` profile is a non-TFT gateway profile. It
+uses `main/ui/profiles/display_lora_gateway.c` for a 128×64 SSD1315 OLED and
+adds the SX1262 receiver sources in `main/CMakeLists.txt`. It does not use a
+TFT_eSPI setup file.
 
 ## 3. Adding a new TFT_eSPI profile
 

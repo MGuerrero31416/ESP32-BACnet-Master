@@ -339,12 +339,13 @@ ST7796S 480x320 - test UI
 LVGL T-Display S3 - LilyGO LVGL UI
 ST7789 240x320 - GMT020-02-7P
 ST7789 170x320 - HW657A - Simple UI
+LoRa 32 V4 SX1262 gateway receiver
 No display
 ```
 
-The T-Display-S3 profile is available only when the selected target is
-`esp32s3`. The other profiles are target-independent in Kconfig, but their
-GPIO mappings must still match the physical processor board.
+The T-Display-S3 and LoRa 32 V4 profiles are intended for the `esp32s3`
+target. The other profiles are target-independent in Kconfig, but their GPIO
+mappings must still match the physical processor board.
 
 See [`docs/profiles/`](docs/profiles/) for details.
 
@@ -361,6 +362,7 @@ The current `main/Kconfig.projbuild` also derives the SEN54 pins and DS18B20 bui
 | T-Display-S3 LVGL   |    GPIO18 |    GPIO17 | Disabled |
 | GMT020-02-7P        |    GPIO13 |    GPIO14 | Disabled |
 | ST7789 HW657A       |    GPIO13 |    GPIO14 | Disabled |
+| LoRa 32 V4 gateway  |     GPIO4 |     GPIO5 | Disabled |
 | No display          |     GPIO4 |     GPIO5 | Disabled |
 
 These are compile-time defaults.
@@ -390,6 +392,7 @@ Current mapping:
 | `CONFIG_USER_DISPLAY_LVGL_TDISPLAY_S3` | `main/ui/profiles/display_lvgl_tdisplay_s3.cpp` |
 | `CONFIG_USER_DISPLAY_ST7789_GMT020`    | `main/ui/profiles/display_st7789_gmt020.cpp`    |
 | `CONFIG_USER_DISPLAY_ST7789_HW657A`    | `main/ui/profiles/display_st7789_hw657a.cpp`    |
+| `CONFIG_USER_DISPLAY_LORA_GATEWAY`     | `main/ui/profiles/display_lora_gateway.c` plus LoRa receiver sources |
 | `CONFIG_USER_DISPLAY_NONE`             | `main/ui/profiles/display_none.c`               |
 
 TFT_eSPI hardware selection is performed in:
