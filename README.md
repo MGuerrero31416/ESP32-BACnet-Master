@@ -10,7 +10,7 @@ The device has been tested on a large Johnson Controls Metasys ADX production si
 * BACRouter-S MS/TP-to-Ethernet router;
 * BACnet/IP over Wi-Fi through a Vonets VAP11G-300 Wi-Fi repeater/bridge.
 
-## Features
+## 📡 Features
 
 * BACnet/IP over Wi-Fi
 * BACnet MS/TP over RS485
@@ -25,12 +25,13 @@ The device has been tested on a large Johnson Controls Metasys ADX production si
 * TFT_eSPI and LVGL display implementations
 * Optional CST816 capacitive touch support
 * NVS persistence for writable BACnet properties
+* Runtime-configurable object names, descriptions, values, units, and COV increments
 * Full BACnet Device identity
 * Optional Adafruit IO MQTT publishing
 * Startup settings report and FreeRTOS stack monitoring
 * Private credentials excluded from source control
 
-## Target and Display Selection
+## 🎛️ Target and Display Selection
 
 Select the ESP-IDF target separately from the hardware/display profile:
 
@@ -45,7 +46,7 @@ See [`docs/profiles/`](docs/profiles/) for supported profiles, wiring, sensor de
 
 After changing the target, display profile, TFT controller, or GPIO mapping, run a full clean build.
 
-## BACnet Object Model
+## 📊 BACnet Object Model
 
 The default configuration exposes 36 BACnet objects:
 
@@ -66,7 +67,7 @@ The default configuration exposes 36 BACnet objects:
 
 These are logical default roles. BACnet instance numbers, names, descriptions, units, initial values, COV increments, and binary text are configurable through the parallel arrays in `main/User_Settings.c`.
 
-## Configuration
+## ⚙️ Configuration
 
 ### Public settings
 
@@ -103,7 +104,7 @@ main/User_Private_Settings.h
 
 Then enter the Wi-Fi and, when required, Adafruit IO credentials. The private file is ignored by Git.
 
-## Build
+## 🚀 Build
 
 Tested environment:
 
@@ -133,7 +134,19 @@ Flash and monitor using the ESP-IDF extension or the corresponding wrapper argum
 
 See [`SETUP.md`](SETUP.md) for the complete environment, configuration, build, and flashing procedure.
 
-## Persistence
+## 🌐 Validation and Commissioning
+
+Use YABE (Yet Another BACnet Explorer) to discover the device with `Who-Is`, inspect
+its BACnet objects, write supported properties, and verify Change of Value (`COV`)
+notifications. BACnet/IP uses the standard UDP port `47808` (`0xBAC0`), which can
+also be inspected with Wireshark when troubleshooting network communication.
+
+For BACnet MS/TP installations, use a daisy-chain RS485 layout, verify the selected
+baud rate and MAC settings, and install 120-ohm termination only at the two physical
+ends of the bus. Avoid frequent automated writes to NVS-backed properties because
+unnecessary flash writes can reduce storage lifetime.
+
+## 💾 Persistence
 
 Supported BACnet object properties and sensor configuration values are stored in NVS.
 
@@ -151,7 +164,7 @@ USER_OVERRIDE_NVS_ON_FLASH = 1;
 
 After restoring the defaults, return the setting to `0`; otherwise NVS will be erased at every startup.
 
-## Documentation
+## 📜 Documentation
 
 * [`SETUP.md`](SETUP.md) — environment, configuration, build, and flashing
 * [`docs/profiles/`](docs/profiles/) — supported hardware/display profiles and wiring
@@ -160,7 +173,7 @@ After restoring the defaults, return the setting to `0`; otherwise NVS will be e
 
 The legacy [`Profiles.md`](Profiles.md) file redirects to the profile documentation folder.
 
-## Source Layout
+## 📂 Source Layout
 
 ```text
 main/
