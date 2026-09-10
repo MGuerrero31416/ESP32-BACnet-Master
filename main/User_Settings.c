@@ -11,7 +11,7 @@
 
 // Module version string for "Firmware Revision" 
 // Change it to reflect the current firmware version.
-const char USER_BACNET_FIRMWARE_REVISION[] = "3.0a 2026_08_26";
+const char USER_BACNET_FIRMWARE_REVISION[] = "3.1a 2026_08_26";
 
 const bool USER_ENABLE_ADAFRUIT_IO = false; //  Enable Adafruit IO MQTT publishing service
 const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publishing SEN54 sensor data. This must exactly match the Feed Key shown in Adafruit IO
@@ -19,34 +19,34 @@ const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publish
 
 const bool USER_ENABLE_BACNET_IP = true;
 const bool USER_WIFI_USE_STATIC_IP = true;
-const char USER_WIFI_STATIC_IP_ADDR[] = "10.120.245.98";
+const char USER_WIFI_STATIC_IP_ADDR[] = "10.120.245.94";
 const char USER_WIFI_STATIC_IP_GATEWAY[] = "10.120.245.254";
 const char USER_WIFI_STATIC_IP_NETMASK[] = "255.255.255.0";
 const char USER_WIFI_STATIC_DNS[] = "8.8.8.8";
 
 /* BACnet device settings */
-const char USER_BACNET_DEVICE_NAME[] = "LoRa_01";
-const uint32_t USER_BACNET_DEVICE_INSTANCE = 55535;
-const int USER_OVERRIDE_NVS_ON_FLASH = 0; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
+const char USER_BACNET_DEVICE_NAME[] = "ESP32-55533";
+const uint32_t USER_BACNET_DEVICE_INSTANCE = 55533;
+const int USER_OVERRIDE_NVS_ON_FLASH = 1; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
 const uint32_t USER_LORA_EXPECTED_DEVICE_ID = 1U;
 const uint32_t USER_LORA_SUPPORTED_VERSION = 1U;
 const uint32_t USER_LORA_PACKET_SIZE = 26U;
 
 /* BACnet device identity settings */
-const char USER_BACNET_DEVICE_DESCRIPTION[] = "LoRa_01";
-const char USER_BACNET_MODEL_NAME[] = "LoRa 32 V4";
+const char USER_BACNET_DEVICE_DESCRIPTION[] = "LoRa_Receiver_01";
+const char USER_BACNET_MODEL_NAME[] = "ESP32-55533";
 const char USER_BACNET_VENDOR_NAME[] = "ESCAP FMS";
 const uint16_t USER_BACNET_VENDOR_ID = 260;
 const char USER_BACNET_LOCATION[] = "SEC-B Ground Floor FMS";
 // V2.5a added LVGL Lilygo T-Display-S3 Touch.
 const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION = USER_BACNET_FIRMWARE_REVISION;
-const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55535-0001"; //CHANGE ME UNIQUE PER DEVICE
+const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
 const bool USER_ENABLE_BACNET_MSTP = true;
 const uint8_t USER_MSTP_MAC_ADDRESS = 33;
 const uint8_t USER_MSTP_MAX_INFO_FRAMES = 1;
-const uint8_t USER_MSTP_MAX_MASTER = 34;
+const uint8_t USER_MSTP_MAX_MASTER = 126;
 const uint32_t USER_MSTP_BAUD_RATE = 38400U;
 
 /* BBMD foreign device registration */
