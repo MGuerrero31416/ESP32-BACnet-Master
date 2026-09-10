@@ -40,6 +40,13 @@ static TaskHandle_t adafruit_io_task_handle = NULL;
 
 void app_main(void)
 {
+    // Bus recovery re-reserves pins it already owns, which the IDF gpio
+    // reservation tracker can't tell apart from a real conflict; these two
+    // tags only ever log that false positive at W, so keep errors visible
+    // and drop the noise.
+    esp_log_level_set("gpio_reserve", ESP_LOG_ERROR);
+    esp_log_level_set("i2c.common", ESP_LOG_ERROR);
+
     ESP_ERROR_CHECK(app_storage_init());
     User_Settings_Print();
 

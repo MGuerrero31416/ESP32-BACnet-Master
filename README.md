@@ -1,6 +1,6 @@
-# ESP32 BACnet Air Quality Controller
+# ESP32 BACnet Sensor, I/O, Control, and LoRa Gateway Platform
 
-Configurable ESP32/ESP32-S3 BACnet device for Sensirion SEN54 air-quality monitoring, optional DS18B20 temperature sensing, local display, BACnet/IP, BACnet MS/TP, and optional Adafruit IO publishing.
+Configurable ESP32/ESP32-S3 BACnet platform for a wide range of hardware profiles, sensors, digital and analog inputs and outputs, local displays, and application-specific control logic. It supports BACnet/IP, BACnet MS/TP, optional Adafruit IO publishing, and a LoRa radio-to-BACnet gateway profile that receives wireless sensor packets while BACnet services remain active.
 
 The project supports selectable hardware/display profiles while keeping BACnet identity, transport settings, object mappings, defaults, and persistence configuration centralized in `main/User_Settings.c`.
 
@@ -18,8 +18,10 @@ The device has been tested on a large Metasys ADX production site using:
 * SEN54 temperature, humidity, VOC, and particulate measurements
 * SEN54 configuration, maintenance commands, and diagnostic status
 * Optional DS18B20 temperature measurement and calibration offset
-* Heltec WiFi LoRa 32 V4 SX1262 gateway receiver profile
+* LoRa (Long Range) radio-to-BACnet gateway using the Heltec WiFi LoRa 32 V4 SX1262 profile
 * Selectable ESP32 and ESP32-S3 hardware/display profiles
+* Profile-specific digital and analog inputs and outputs
+* Application-specific control logic for different hardware deployments
 * TFT_eSPI and LVGL display implementations
 * Optional CST816 capacitive touch support
 * NVS persistence for writable BACnet properties
