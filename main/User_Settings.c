@@ -27,7 +27,7 @@ const char USER_WIFI_STATIC_DNS[] = "8.8.8.8";
 /* BACnet device settings */
 const char USER_BACNET_DEVICE_NAME[] = "ESP32-55533";
 const uint32_t USER_BACNET_DEVICE_INSTANCE = 55533;
-const int USER_OVERRIDE_NVS_ON_FLASH = 1; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
+const int USER_OVERRIDE_NVS_ON_FLASH = 0; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
 const uint32_t USER_LORA_EXPECTED_DEVICE_ID = 1U;
 const uint32_t USER_LORA_SUPPORTED_VERSION = 1U;
 const uint32_t USER_LORA_PACKET_SIZE = 26U;
