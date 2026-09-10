@@ -4,7 +4,7 @@ Configurable ESP32/ESP32-S3 BACnet platform for a wide range of hardware profile
 
 The project supports selectable hardware/display profiles while keeping BACnet identity, transport settings, object mappings, defaults, and persistence configuration centralized in `main/User_Settings.c`.
 
-The device has been tested on a large Metasys ADX production site using:
+The device has been tested on a large Johnson Controls Metasys ADX production site using:
 
 * SNE MS/TP bus;
 * BACRouter-S MS/TP-to-Ethernet router;
