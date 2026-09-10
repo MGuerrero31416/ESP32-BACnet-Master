@@ -6,3 +6,6 @@ dependencies:
   espressif/mqtt: '^1.0.0'
   lvgl/lvgl: '8.3.11'
   espressif/esp_lvgl_port: '>=1.0.0'
+  u8g2:
+    git: "https://github.com/olikraus/u8g2.git"
+    version: "c2935e962cbcaa9ed76b7cae30f47be14c860651"

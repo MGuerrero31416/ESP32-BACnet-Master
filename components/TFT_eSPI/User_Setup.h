@@ -20,6 +20,15 @@
 
 #include "User_Setups/Setup_Project_ST7789_HW657A.h"
 
+#elif defined(CONFIG_USER_DISPLAY_LORA_GATEWAY)
+
+/*
+ * The LoRa gateway path does not use the TFT display stack.
+ * Keep a valid fallback setup so the unconditional TFT_eSPI
+ * component still compiles cleanly in this profile.
+ */
+#include "User_Setups/Setup_Project_ST7796S.h"
+
 #elif defined(CONFIG_USER_DISPLAY_NONE)
 
 /*

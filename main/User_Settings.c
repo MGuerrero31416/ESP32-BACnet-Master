@@ -11,36 +11,39 @@
 
 // Module version string for "Firmware Revision" 
 // Change it to reflect the current firmware version.
-const char USER_BACNET_FIRMWARE_REVISION[] = "2.7a 2026_08_24";
+const char USER_BACNET_FIRMWARE_REVISION[] = "3.0a 2026_08_26";
 
-const bool USER_ENABLE_ADAFRUIT_IO = true; //  Enable Adafruit IO MQTT publishing service
+const bool USER_ENABLE_ADAFRUIT_IO = false; //  Enable Adafruit IO MQTT publishing service
 const char USER_AIO_FEED_KEY[] = "sen54-01"; // Adafruit IO feed key for publishing SEN54 sensor data. This must exactly match the Feed Key shown in Adafruit IO
 
 
 const bool USER_ENABLE_BACNET_IP = true;
-const bool USER_WIFI_USE_STATIC_IP = false;
-const char USER_WIFI_STATIC_IP_ADDR[] = "10.120.245.97";
+const bool USER_WIFI_USE_STATIC_IP = true;
+const char USER_WIFI_STATIC_IP_ADDR[] = "10.120.245.98";
 const char USER_WIFI_STATIC_IP_GATEWAY[] = "10.120.245.254";
 const char USER_WIFI_STATIC_IP_NETMASK[] = "255.255.255.0";
 const char USER_WIFI_STATIC_DNS[] = "8.8.8.8";
 
 /* BACnet device settings */
-const char USER_BACNET_DEVICE_NAME[] = "ESP32_55533";
-const uint32_t USER_BACNET_DEVICE_INSTANCE = 55533;
+const char USER_BACNET_DEVICE_NAME[] = "LoRa_01";
+const uint32_t USER_BACNET_DEVICE_INSTANCE = 55535;
 const int USER_OVERRIDE_NVS_ON_FLASH = 0; // 0 = use NVS on flash, 1 = override NVS on flash with settings in this file
+const uint32_t USER_LORA_EXPECTED_DEVICE_ID = 1U;
+const uint32_t USER_LORA_SUPPORTED_VERSION = 1U;
+const uint32_t USER_LORA_PACKET_SIZE = 26U;
 
 /* BACnet device identity settings */
-const char USER_BACNET_DEVICE_DESCRIPTION[] = "ESP32 BACnet Master";
-const char USER_BACNET_MODEL_NAME[] = "ESP32-WROOM32-SEN54-ST7789";
+const char USER_BACNET_DEVICE_DESCRIPTION[] = "LoRa_01";
+const char USER_BACNET_MODEL_NAME[] = "LoRa 32 V4";
 const char USER_BACNET_VENDOR_NAME[] = "ESCAP FMS";
 const uint16_t USER_BACNET_VENDOR_ID = 260;
 const char USER_BACNET_LOCATION[] = "SEC-B Ground Floor FMS";
 // V2.5a added LVGL Lilygo T-Display-S3 Touch.
 const char *USER_BACNET_APPLICATION_SOFTWARE_VERSION = USER_BACNET_FIRMWARE_REVISION;
-const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55533-0001"; //CHANGE ME UNIQUE PER DEVICE
+const char USER_BACNET_SERIAL_NUMBER[] = "ESP32-55535-0001"; //CHANGE ME UNIQUE PER DEVICE
 
 /* BACnet MS/TP settings */
-const bool USER_ENABLE_BACNET_MSTP = false;
+const bool USER_ENABLE_BACNET_MSTP = true;
 const uint8_t USER_MSTP_MAC_ADDRESS = 33;
 const uint8_t USER_MSTP_MAX_INFO_FRAMES = 1;
 const uint8_t USER_MSTP_MAX_MASTER = 34;
@@ -182,7 +185,7 @@ const uint8_t USER_BV_INITIAL_VALUES[USER_BV_COUNT] = {
     BINARY_INACTIVE
 };
 
-const uint32_t USER_AI_INSTANCES[USER_AI_COUNT] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+const uint32_t USER_AI_INSTANCES[USER_AI_COUNT] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 const char *USER_AI_NAMES[USER_AI_COUNT] = {
     "SEN54 Temp",
     "SEN54 RH",
@@ -191,7 +194,8 @@ const char *USER_AI_NAMES[USER_AI_COUNT] = {
     "SEN54 PM2.5",
     "SEN54 PM4.0",
     "SEN54 PM10",
-    "DS18B20 Temp"
+    "DS18B20 Temp",
+    "LORA Status"
 };
 const char *USER_AI_DESCRIPTIONS[USER_AI_COUNT] = {
     "SEN54 Temperature",
@@ -201,7 +205,8 @@ const char *USER_AI_DESCRIPTIONS[USER_AI_COUNT] = {
     "SEN54 PM2.5",
     "SEN54 PM4.0",
     "SEN54 PM10",
-    "DS18B20 Temp sensor"
+    "DS18B20 Temp sensor",
+    "LoRa gateway packet status"
 };
 const uint16_t USER_AI_UNITS[USER_AI_COUNT] = {
     UNITS_DEGREES_CELSIUS,
@@ -211,9 +216,11 @@ const uint16_t USER_AI_UNITS[USER_AI_COUNT] = {
     UNITS_MICROGRAMS_PER_CUBIC_METER,
     UNITS_MICROGRAMS_PER_CUBIC_METER,
     UNITS_MICROGRAMS_PER_CUBIC_METER,
-    UNITS_DEGREES_CELSIUS
+    UNITS_DEGREES_CELSIUS,
+    UNITS_NO_UNITS
 };
 const float USER_AI_INITIAL_VALUES[USER_AI_COUNT] = {
+    0.0f,
     0.0f,
     0.0f,
     0.0f,
@@ -231,7 +238,8 @@ const float USER_AI_COV_INCREMENTS[USER_AI_COUNT] = {
     1.0f,
     1.0f,
     1.0f,
-    0.1f
+    0.1f,
+    1.0f
 };
 
 const uint32_t USER_BI_INSTANCES[USER_BI_COUNT] = { 1, 2, 3, 4 };
@@ -348,6 +356,8 @@ void User_Settings_Print(void)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7789 240x320 - GMT020-02-7P");
     #elif defined(CONFIG_USER_DISPLAY_ST7789_HW657A)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: ST7789 170x320 - HW657A - Simple UI");
+    #elif defined(CONFIG_USER_DISPLAY_LORA_GATEWAY)
+        ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: LoRa 32 V4 SX1262 gateway receiver");
     #elif defined(CONFIG_USER_DISPLAY_NONE)
         ESP_LOGI(TAG_USER_SETTINGS, "Display Hardware Profile: None");
     #else
