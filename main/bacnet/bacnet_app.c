@@ -953,6 +953,9 @@ static void bacnet_process_frame_event(const bacnet_event_t *evt)
 
         if (apdu_offset > 0 && apdu_offset < (int)evt->length) {
             bacnet_profile_notify(BACNET_APP_PROFILE_BIP_RX);
+#if defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) && CONFIG_USER_DISPLAY_LORA_GATEWAY
+            bacnet_coordinator_activate_link(BACNET_LINK_BIP);
+#endif
             bacnet_datalink_lock(s_datalink_bip);
             apdu_handler(&src, (uint8_t *)&evt->data.frame[apdu_offset], evt->length - apdu_offset);
             bacnet_datalink_unlock();
@@ -987,6 +990,9 @@ static void bacnet_process_frame_event(const bacnet_event_t *evt)
             bacnet_profile_notify(
                 BACNET_APP_PROFILE_MSTP_RX);
 
+#if defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) && CONFIG_USER_DISPLAY_LORA_GATEWAY
+            bacnet_coordinator_activate_link(BACNET_LINK_MSTP);
+#endif
             bacnet_datalink_lock(s_datalink_mstp);
 
             apdu_handler(
@@ -1058,6 +1064,9 @@ static void bacnet_dispatcher_tick_100ms(void)
      * and WriteProperty requests.
      */
     if (s_mstp_ready) {
+#if defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) && CONFIG_USER_DISPLAY_LORA_GATEWAY
+        bacnet_coordinator_activate_link(BACNET_LINK_MSTP);
+#endif
         bacnet_datalink_lock(s_datalink_mstp);
 
         bacnet_profile_notify(

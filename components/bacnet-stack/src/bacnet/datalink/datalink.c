@@ -148,6 +148,18 @@ int datalink_send_pdu(
 {
     int bytes = 0;
 
+#if defined(CONFIG_USER_DISPLAY_LORA_GATEWAY) && CONFIG_USER_DISPLAY_LORA_GATEWAY && \
+    defined(BACDL_BIP) && defined(BACDL_MSTP)
+    /* Local B/IP and MS/TP destinations use distinct MAC lengths. */
+    if (dest != NULL) {
+        if (dest->mac_len == 1) {
+            Datalink_Transport = DATALINK_MSTP;
+        } else if (dest->mac_len == 6) {
+            Datalink_Transport = DATALINK_BIP;
+        }
+    }
+#endif
+
     switch (Datalink_Transport) {
         case DATALINK_NONE:
             bytes = pdu_len;

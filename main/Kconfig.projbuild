@@ -93,18 +93,23 @@ config USER_SENSOR_DS18B20
 # MS/TP RS-485 transceiver (MAX485). GPIO5/16/17 collide with the
 # T-Display-S3 board's TFT reset and touch I2C pins, so that profile
 # uses free header pins instead.
+# The LoRa gateway profile uses the working MAX485 mapping: GPIO34 = DI,
+# GPIO6 = RO, and GPIO33 = DE/RE.
 config USER_MSTP_UART_TX_GPIO
     int
+    default 34 if USER_DISPLAY_LORA_GATEWAY
     default 1 if USER_DISPLAY_LVGL_TDISPLAY_S3
     default 17
 
 config USER_MSTP_UART_RX_GPIO
     int
+    default 6 if USER_DISPLAY_LORA_GATEWAY
     default 2 if USER_DISPLAY_LVGL_TDISPLAY_S3
     default 16
 
 config USER_MSTP_UART_DE_GPIO
     int
+    default 33 if USER_DISPLAY_LORA_GATEWAY
     default 3 if USER_DISPLAY_LVGL_TDISPLAY_S3
     default 5
 

@@ -63,6 +63,18 @@ The OLED wiring is defined in `main/ui/profiles/display_lora_gateway.c`.
 The OLED VEXT control is driven low to power the display. The UI uses a
 128x64 landscape framebuffer.
 
+### MS/TP RS-485 (MAX485)
+
+| Signal | GPIO |
+|---|---:|
+| DI (UART TX to MAX485) | 34 |
+| RO (UART RX from MAX485) | 6 |
+| DE / RE (driver enable / receive enable) | 33 |
+
+This is the working mapping for the current `USER_DISPLAY_LORA_GATEWAY`
+profile. The MAX485 input/output are wired as GPIO34 (DI), GPIO6 (RO), and
+GPIO33 (DE/RE).
+
 ## Runtime behavior
 
 - SEN54 and DS18B20 acquisition is disabled for this profile.
